@@ -85,6 +85,13 @@ def update_catalog():
         with open(CATALOG_PATH, 'w', encoding='utf-8') as f:
             json.dump(catalog, f, ensure_ascii=False, separators=(',', ':'))
         print(f"✅ Berhasil menambah {new_added} film/series baru ke catalog.json! Total: {len(catalog)} judul.")
+        
+        # Auto-commit and push to GitHub
+        try:
+            os.system(f"cd /home/junancok/Downloads/movie-stream-app && git add catalog.json && git commit -m 'cron: auto-update catalog with {new_added} new releases' && git push origin main")
+            print("🚀 Auto-pushed updated catalog to GitHub repo!")
+        except Exception as ge:
+            print(f"Git push note: {ge}")
     else:
         print("✨ Database sudah up-to-date! Tidak ada judul baru.")
 

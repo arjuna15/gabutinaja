@@ -575,15 +575,57 @@ function loadServerStream(serverKey) {
     }, 2500);
 }
 
-// Navigation Tabs
+// Navigation Tabs & Mobile Dropdown Handler
 function initNavigation() {
-    document.querySelectorAll('.nav-link').forEach(btn => {
+    const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+    const mobileDropdownBtn = document.getElementById('mobile-dropdown-btn');
+    const mobileDropdownMenu = document.getElementById('mobile-dropdown-menu');
+    const mobileMenuIcon = document.getElementById('mobile-menu-icon');
+
+    // Mobile Dropdown Toggle Event
+    if (mobileDropdownBtn && mobileDropdownMenu) {
+        mobileDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = !mobileDropdownMenu.classList.contains('hidden');
+            if (isOpen) {
+                mobileDropdownMenu.classList.add('hidden');
+                if (mobileMenuIcon) mobileMenuIcon.className = 'fa-solid fa-bars';
+            } else {
+                mobileDropdownMenu.classList.remove('hidden');
+                if (mobileMenuIcon) mobileMenuIcon.className = 'fa-solid fa-xmark';
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileDropdownMenu.contains(e.target) && !mobileDropdownBtn.contains(e.target)) {
+                mobileDropdownMenu.classList.add('hidden');
+                if (mobileMenuIcon) mobileMenuIcon.className = 'fa-solid fa-bars';
+            }
+        });
+    }
+
+    navLinks.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            const targetTab = btn.dataset.tab;
+            if (!targetTab) return;
+
+            // Sync active state on both desktop and mobile buttons
+            navLinks.forEach(b => {
+                if (b.dataset.tab === targetTab) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
             
-            state.currentTab = btn.dataset.tab;
+            state.currentTab = targetTab;
             state.currentPage = 1; // Reset to page 1 on tab change
+
+            if (mobileDropdownMenu) {
+                mobileDropdownMenu.classList.add('hidden');
+                if (mobileMenuIcon) mobileMenuIcon.className = 'fa-solid fa-bars';
+            }
             
             if (state.currentTab === 'watchlist') {
                 elements.sectionTitle.innerHTML = `<i class="fa-solid fa-bookmark text-gradient"></i> Koleksi Favorit Saya`;
@@ -659,7 +701,9 @@ function updateFavButtonState(isFav) {
 }
 
 function updateFavCount() {
-    elements.favCount.textContent = state.watchlist.length;
+    if (elements.favCount) elements.favCount.textContent = state.watchlist.length;
+    const mobileFavCount = document.querySelector('.fav-count-mobile');
+    if (mobileFavCount) mobileFavCount.textContent = state.watchlist.length;
 }
 
 // Genre Filter Chips

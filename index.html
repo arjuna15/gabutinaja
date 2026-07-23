@@ -26,7 +26,7 @@
                 <img src="logo-white-text.png" alt="gabutin aja" class="brand-logo-img">
             </div>
 
-            <nav class="nav-menu">
+            <nav class="nav-menu desktop-menu">
                 <button class="nav-link active" data-tab="home"><i class="fa-solid fa-house"></i> Beranda</button>
                 <button class="nav-link" data-tab="movies"><i class="fa-solid fa-film"></i> Film</button>
                 <button class="nav-link" data-tab="series"><i class="fa-solid fa-tv"></i> Serial TV</button>
@@ -40,7 +40,24 @@
                     <input type="text" id="search-input" placeholder="Cari judul film, serial, genre...">
                     <button id="clear-search" class="clear-btn hidden"><i class="fa-solid fa-xmark"></i></button>
                 </div>
+
+                <!-- Mobile Dropdown Toggle Button -->
+                <button class="mobile-dropdown-btn" id="mobile-dropdown-btn" aria-label="Menu">
+                    <i class="fa-solid fa-bars" id="mobile-menu-icon"></i>
+                    <span>Menu</span>
+                </button>
             </div>
+        </div>
+
+        <!-- Mobile Dropdown Glass Menu Drawer -->
+        <div class="mobile-dropdown-menu hidden" id="mobile-dropdown-menu">
+            <nav class="mobile-nav-links">
+                <button class="mobile-nav-link active" data-tab="home"><i class="fa-solid fa-house"></i> Beranda <i class="fa-solid fa-chevron-right arrow"></i></button>
+                <button class="mobile-nav-link" data-tab="movies"><i class="fa-solid fa-film"></i> Katalog Film <i class="fa-solid fa-chevron-right arrow"></i></button>
+                <button class="mobile-nav-link" data-tab="series"><i class="fa-solid fa-tv"></i> Serial TV & Anime <i class="fa-solid fa-chevron-right arrow"></i></button>
+                <button class="mobile-nav-link" data-tab="trending"><i class="fa-solid fa-fire"></i> Paling Populer <i class="fa-solid fa-chevron-right arrow"></i></button>
+                <button class="mobile-nav-link" data-tab="watchlist"><i class="fa-solid fa-bookmark"></i> Favorit Saya (<span class="fav-count-mobile">0</span>) <i class="fa-solid fa-chevron-right arrow"></i></button>
+            </nav>
         </div>
     </header>
 

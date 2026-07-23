@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-gabutin aja - Massive 14,000+ Movies & Series Catalog Generator
-Scrapes TMDB API (IDLIX source) 2020-2026 for ALL movies, TV series, anime, K-drama, & Indonesian cinema
-Generates a clean, ultra-optimized catalog.json with 14,000+ unique titles.
+gabutin aja - Exhaustive 14,500+ Movies & Series Catalog Generator
+Scrapes TMDB API 2020-2026 up to 35 pages per year to achieve 14,000+ unique titles.
 """
 import json
 import urllib.request
@@ -46,7 +45,7 @@ def add_to_catalog(item, mtype="movie"):
 
     poster = item.get('poster_path')
     if not poster:
-        return False  # skip entries without posters
+        return False
 
     backdrop = item.get('backdrop_path')
     release = item.get('release_date') if is_movie else item.get('first_air_date')
@@ -68,7 +67,7 @@ def add_to_catalog(item, mtype="movie"):
 def fetch_discover(mtype, year, page, extra=""):
     path = "/discover/movie" if mtype == "movie" else "/discover/tv"
     date_param = f"primary_release_year={year}" if mtype == "movie" else f"first_air_date_year={year}"
-    data = api_fetch(path, f"{date_param}&page={page}&sort_by=popularity.desc&vote_count.gte=3&{extra}")
+    data = api_fetch(path, f"{date_param}&page={page}&sort_by=popularity.desc&vote_count.gte=2&{extra}")
     if not data or 'results' not in data:
         return 0
     cnt = 0
@@ -80,54 +79,57 @@ def fetch_discover(mtype, year, page, extra=""):
 def main():
     years = [2026, 2025, 2024, 2023, 2022, 2021, 2020]
     print("=" * 60)
-    print("🎬 GABUTIN AJA - MASSIVE 14,000+ CATALOG GENERATOR")
+    print("🎬 GABUTIN AJA - EXHAUSTIVE 14,500+ CATALOG SCRAPER")
     print("=" * 60)
     sys.stdout.flush()
 
-    # Build tasks
     tasks = []
+    # 35 pages per year for movies (4,900+ items)
     for y in years:
-        for p in range(1, 26):  # 25 pages movies per year = 3500+
+        for p in range(1, 36):
             tasks.append(("movie", y, p, ""))
-        for p in range(1, 20):  # 19 pages TV per year = 2600+
+    # 28 pages per year for series (3,900+ items)
+    for y in years:
+        for p in range(1, 29):
             tasks.append(("tv", y, p, ""))
 
-    # Additional genres & languages (Anime, K-Drama, Indo, Bollywood, etc.)
+    # Extra Genres & Languages (Anime, K-Drama, Indo, Bollywood, Japanese, Asian)
     for y in years:
-        for p in range(1, 12):
-            tasks.append(("movie", y, p, "with_genres=16")) # Anime movies
-            tasks.append(("tv", y, p, "with_genres=16")) # Anime series
-            tasks.append(("movie", y, p, "with_original_language=id")) # Indo movies
-            tasks.append(("tv", y, p, "with_original_language=id")) # Indo series
-            tasks.append(("tv", y, p, "with_original_language=ko")) # K-Drama
-            tasks.append(("movie", y, p, "with_original_language=hi")) # Bollywood
-            tasks.append(("movie", y, p, "with_original_language=ja")) # Japanese
+        for p in range(1, 15):
+            tasks.append(("movie", y, p, "with_genres=16"))
+            tasks.append(("tv", y, p, "with_genres=16"))
+            tasks.append(("movie", y, p, "with_original_language=id"))
+            tasks.append(("tv", y, p, "with_original_language=id"))
+            tasks.append(("tv", y, p, "with_original_language=ko"))
+            tasks.append(("movie", y, p, "with_original_language=hi"))
+            tasks.append(("movie", y, p, "with_original_language=ja"))
+            tasks.append(("tv", y, p, "with_original_language=ja"))
 
     total = len(tasks)
     done = 0
 
-    print(f"🚀 Launching {total} parallel requests...")
+    print(f"🚀 Launching {total} requests for 14,500+ target...")
     sys.stdout.flush()
 
-    with ThreadPoolExecutor(max_workers=5) as ex:
+    with ThreadPoolExecutor(max_workers=6) as ex:
         futures = {ex.submit(fetch_discover, *t): t for t in tasks}
         for f in as_completed(futures):
             done += 1
-            if done % 50 == 0 or done == total:
+            if done % 60 == 0 or done == total:
                 print(f"   📥 Progress: {done}/{total} requests... ({len(catalog)} unique titles)")
                 sys.stdout.flush()
 
     full_list = list(catalog.values())
 
     print("\n" + "=" * 60)
-    print(f"🎉 SELESAI! TOTAL {len(full_list)} JUDUL UNIK")
+    print(f"🎉 SCRAPING SELESAI! TOTAL {len(full_list)} JUDUL UNIK")
     print("=" * 60)
     sys.stdout.flush()
 
     with open('/home/junancok/Downloads/movie-stream-app/catalog.json', 'w', encoding='utf-8') as f:
         json.dump(full_list, f, ensure_ascii=False, separators=(',', ':'))
 
-    print(f"✅ Saved to catalog.json ({len(full_list)} items)")
+    print(f"✅ catalog.json updated! ({len(full_list)} items)")
 
 if __name__ == '__main__':
     main()

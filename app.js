@@ -93,10 +93,10 @@ const SERVERS = {
             ? `https://vidsrc.cc/v2/embed/tv/${movie.id}/${season}/${episode}` 
             : `https://vidsrc.cc/v2/embed/movie/${movie.id}`;
     },
-    'embed-su': (movie, season = 1, episode = 1) => {
+    'vidsrc-to': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
-            ? `https://embed.su/embed/tv/${movie.id}/${season}/${episode}` 
-            : `https://embed.su/embed/movie/${movie.id}`;
+            ? `https://vidsrc.to/embed/tv/${movie.id}/${season}/${episode}` 
+            : `https://vidsrc.to/embed/movie/${movie.id}`;
     },
     'autoembed': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 

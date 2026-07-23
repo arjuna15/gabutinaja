@@ -28,9 +28,9 @@
     --text-secondary: rgba(255, 255, 255, 0.75);
     --text-muted: rgba(255, 255, 255, 0.42);
 
-    /* Liquid Glass Backdrop Blur Presets */
-    --glass-blur: blur(35px) saturate(180%);
-    --glass-blur-heavy: blur(50px) saturate(200%);
+    /* Liquid Glass Backdrop Blur Presets (Crystal Clear Mode) */
+    --glass-blur: none;
+    --glass-blur-heavy: none;
 
     /* Pure Glass Reflections & Shadows */
     --glass-shadow: 
@@ -685,24 +685,24 @@ body {
 }
 
 .movie-card {
-    background: rgba(255, 255, 255, 0.035);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid var(--glass-border-bright);
     border-radius: var(--radius-md);
     overflow: hidden;
     cursor: pointer;
     transition: var(--transition);
-    box-shadow: var(--glass-shadow);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.25);
     display: flex;
     flex-direction: column;
 }
 
 .movie-card:hover {
     transform: translateY(-8px) scale(1.025);
-    border-color: var(--glass-border-bright);
-    box-shadow: var(--glass-shadow-hover);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .card-poster {

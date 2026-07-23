@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gabutin aja - Platform Streaming Film & Serial TV</title>
+    <link rel="icon" type="image/png" href="erasebg-transformed.png">
+    <meta name="description" content="gabutin aja - Platform Streaming Film & Serial TV tanpa iklan, desain futuristik & modern.">
+    <!-- Google Fonts (Outfit & Plus Jakarta Sans for Claymorphism) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Glow Elements -->
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="logo-white-text.png" alt="gabutin aja" class="brand-logo-img">
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-link active" data-tab="home"><i class="fa-solid fa-house"></i> Beranda</button>
+                <button class="nav-link" data-tab="movies"><i class="fa-solid fa-film"></i> Film</button>
+                <button class="nav-link" data-tab="series"><i class="fa-solid fa-tv"></i> Serial TV</button>
+                <button class="nav-link" data-tab="trending"><i class="fa-solid fa-fire"></i> Populer</button>
+                <button class="nav-link" data-tab="watchlist"><i class="fa-solid fa-bookmark"></i> Favorit (<span id="fav-count">0</span>)</button>
+            </nav>
+
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Cari judul film, serial, genre...">
+                    <button id="clear-search" class="clear-btn hidden"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+
+        <!-- Hero Featured Carousel / Banner -->
+        <section id="hero-banner" class="hero-section">
+            <div class="hero-backdrop" id="hero-bg"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-badges">
+                    <span class="badge badge-trending"><i class="fa-solid fa-bolt"></i> Trending #1</span>
+                    <span class="badge badge-quality">4K Ultra HD</span>
+                    <span class="badge badge-year" id="hero-year">2024</span>
+                </div>
+                <h1 class="hero-title" id="hero-title">Memuat Featured Film...</h1>
+                <p class="hero-overview" id="hero-overview">Nikmati pengalaman streaming film & TV series secara lokal dengan tampilan premium, tanpa iklan mengganggu.</p>
+                <div class="hero-meta">
+                    <span><i class="fa-solid fa-star rating-star"></i> <strong id="hero-rating">8.9</strong>/10</span>
+                    <span><i class="fa-solid fa-clock"></i> <span id="hero-duration">2j 15m</span></span>
+                    <span id="hero-genres" class="genre-tags"><span class="tag">Action</span><span class="tag">Sci-Fi</span></span>
+                </div>
+                <div class="hero-buttons">
+                    <button class="btn-play" id="hero-play-btn"><i class="fa-solid fa-play"></i> Tonton Sekarang</button>
+                    <button class="btn-info" id="hero-info-btn"><i class="fa-solid fa-circle-info"></i> Detail Film</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category & Genre Filter Chips -->
+        <section class="filter-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-sliders"></i> Filter Genre</h2>
+            </div>
+            <div class="genre-chips" id="genre-container">
+                <button class="chip active" data-genre="all">Semua</button>
+                <button class="chip" data-genre="28">Action</button>
+                <button class="chip" data-genre="12">Adventure</button>
+                <button class="chip" data-genre="16">Animation</button>
+                <button class="chip" data-genre="35">Comedy</button>
+                <button class="chip" data-genre="80">Crime</button>
+                <button class="chip" data-genre="18">Drama</button>
+                <button class="chip" data-genre="14">Fantasy</button>
+                <button class="chip" data-genre="27">Horror</button>
+                <button class="chip" data-genre="878">Sci-Fi</button>
+                <button class="chip" data-genre="53">Thriller</button>
+            </div>
+        </section>
+
+        <!-- Dynamic Content Rows -->
+        <section class="content-section" id="results-section">
+            <div class="section-header">
+                <h2 id="section-title"><i class="fa-solid fa-fire text-gradient"></i> Trending Hari Ini</h2>
+                <div class="section-actions">
+                    <span class="result-count" id="result-count">Memuat...</span>
+                </div>
+            </div>
+
+            <!-- Grid Cards -->
+            <div class="movie-grid" id="movie-grid">
+                <!-- Dynamic cards populated by JS -->
+            </div>
+
+            <!-- Page Pagination Controls -->
+            <div class="pagination-container" id="pagination-container">
+                <!-- Dynamic pagination buttons -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Player Modal (Iframe Streaming Container) -->
+    <div class="modal-backdrop hidden" id="player-modal">
+        <div class="modal-container player-modal-container">
+            <div class="modal-header">
+                <div class="modal-title-info">
+                    <h3 id="modal-movie-title">Nama Film</h3>
+                    <span id="modal-movie-subtitle" class="text-muted">2024 • Action, Sci-Fi</span>
+                </div>
+                <button class="modal-close-btn" id="close-player-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Server Selector Bar -->
+            <div class="server-selector-bar">
+                <span class="server-label"><i class="fa-solid fa-server"></i> Pilih Stream Server:</span>
+                <div class="server-buttons" id="server-list">
+                    <button class="server-btn active" data-server="vidbinge"><i class="fa-solid fa-shield-cat"></i> Server 1 (VidBinge - Zero Ads)</button>
+                    <button class="server-btn" data-server="embed-su">Server 2 (Embed.su)</button>
+                    <button class="server-btn" data-server="vidsrc-vip">Server 3 (VidSrc.vip)</button>
+                    <button class="server-btn" data-server="multiembed">Server 4 (MultiEmbed)</button>
+                    <button class="server-btn" data-server="videasy">Server 5 (Videasy)</button>
+                    <button class="server-btn custom-server" id="btn-input-custom-url"><i class="fa-solid fa-link"></i> Custom Direct Link / MP4</button>
+                </div>
+            </div>
+
+            <!-- TV Series Season & Episode Selector Bar -->
+            <div class="tv-episodes-bar hidden" id="tv-episodes-bar">
+                <div class="season-picker">
+                    <label for="season-select"><i class="fa-solid fa-layer-group"></i> Musim / Season:</label>
+                    <select id="season-select" class="season-dropdown">
+                        <option value="1">Season 1</option>
+                        <option value="2">Season 2</option>
+                        <option value="3">Season 3</option>
+                        <option value="4">Season 4</option>
+                        <option value="5">Season 5</option>
+                        <option value="6">Season 6</option>
+                        <option value="7">Season 7</option>
+                        <option value="8">Season 8</option>
+                        <option value="9">Season 9</option>
+                        <option value="10">Season 10</option>
+                    </select>
+                </div>
+                <div class="episode-picker">
+                    <span class="episode-label"><i class="fa-solid fa-list-ol"></i> Pilih Episode:</span>
+                    <div class="episode-grid" id="episode-grid">
+                        <!-- Episode buttons generated dynamically by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Player Box -->
+            <div class="video-player-wrapper" id="player-wrapper">
+                <div class="player-loader hidden" id="player-loader">
+                    <div class="spinner"></div>
+                    <p>Memuat Stream Video...</p>
+                </div>
+
+                <!-- Anti-PopUp Click Shield Overlay -->
+                <div class="ad-shield-overlay" id="ad-shield">
+                    <div class="shield-content">
+                        <i class="fa-solid fa-shield-halved shield-icon"></i>
+                        <h3>gabutin aja Ad-Shield Active</h3>
+                        <p>Klik tombol di bawah untuk mengaktifkan pemutar tanpa memicu tab/popup baru.</p>
+                        <button id="activate-stream-btn" class="btn-shield-play"><i class="fa-solid fa-play"></i> Buka Pemutar (Anti-PopUp)</button>
+                    </div>
+                </div>
+                
+                <!-- Dynamic Iframe Embed Player -->
+                <iframe id="stream-iframe" 
+                        src="" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        allowfullscreen 
+                        allow="autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        referrerpolicy="no-referrer">
+                </iframe>
+
+                <!-- Native HTML5 Video Player (for direct MP4/HLS links) -->
+                <video id="native-video" class="hidden" controls autoplay style="width:100%; height:100%; object-fit:contain; background:#000;">
+                    <source id="native-video-source" src="" type="video/mp4">
+                    Browser Anda tidak mendukung pemutar video HTML5.
+                </video>
+            </div>
+
+            <!-- Custom URL Drawer (Expandable) -->
+            <div class="custom-url-box hidden" id="custom-url-box">
+                <label for="custom-iframe-input"><i class="fa-solid fa-terminal"></i> Masukkan Link Iframe / Stream Embed / File Lokal:</label>
+                <div class="input-group">
+                    <input type="text" id="custom-iframe-input" placeholder="https://domain-anda.com/embed/movie.mp4 atau https://vidsrc.to/embed/movie/...">
+                    <button id="apply-custom-url" class="btn-primary"><i class="fa-solid fa-play"></i> Putar</button>
+                </div>
+                <p class="help-text"><i class="fa-solid fa-lightbulb"></i> Anda bisa memasukkan URL video `.mp4`, `.m3u8`, link embed iframe pihak ke-3, atau server lokal Anda sendiri (seperti HLS stream lokal `http://localhost:8000/stream`).</p>
+            </div>
+
+            <!-- Controls & Information below Player -->
+            <div class="modal-body-info">
+                <div class="movie-detail-grid">
+                    <div class="movie-poster-sm">
+                        <img id="modal-poster" src="" alt="Poster">
+                    </div>
+                    <div class="movie-details">
+                        <div class="rating-bar">
+                            <span class="rating-badge"><i class="fa-solid fa-star"></i> <span id="modal-rating">8.5</span></span>
+                            <button id="modal-fav-btn" class="btn-fav"><i class="fa-regular fa-bookmark"></i> Tambah ke Favorit</button>
+                        </div>
+                        <h4>Sinopsis</h4>
+                        <p id="modal-overview">Deskripsi film akan muncul di sini.</p>
+                        <div class="meta-row">
+                            <div><strong>Bahasa:</strong> <span id="modal-lang">English</span></div>
+                            <div><strong>Status:</strong> Released</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand-box">
+                    <img src="logo-white-text.png" alt="gabutin aja" class="footer-logo-img">
+                    <p class="footer-desc">Platform streaming media lokal tanpa gangguan iklan. Nikmati 14,000+ film, serial TV, anime, dan drama Korea kualitas HD gratis.</p>
+                </div>
+
+                <div class="footer-nav">
+                    <div class="footer-col">
+                        <h4>Navigasi Menu</h4>
+                        <ul>
+                            <li><a href="#" onclick="document.querySelector('[data-tab=home]').click(); return false;"><i class="fa-solid fa-house"></i> Beranda</a></li>
+                            <li><a href="#" onclick="document.querySelector('[data-tab=movies]').click(); return false;"><i class="fa-solid fa-film"></i> Katalog Film</a></li>
+                            <li><a href="#" onclick="document.querySelector('[data-tab=series]').click(); return false;"><i class="fa-solid fa-tv"></i> Serial TV & Anime</a></li>
+                            <li><a href="#" onclick="document.querySelector('[data-tab=trending]').click(); return false;"><i class="fa-solid fa-fire"></i> Paling Populer</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Keunggulan</h4>
+                        <ul>
+                            <li><span><i class="fa-solid fa-shield-halved text-gradient"></i> Bebas Iklan Popup</span></li>
+                            <li><span><i class="fa-solid fa-bolt text-gradient"></i> Multi-Server Cepat</span></li>
+                            <li><span><i class="fa-solid fa-film text-gradient"></i> 14,000+ Koleksi</span></li>
+                            <li><span><i class="fa-solid fa-wand-magic-sparkles text-gradient"></i> 3D Claymorphism UI</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="copyright">&copy; 2026 <strong>gabutin aja</strong>. Personal Local Media Streaming Platform.</p>
+                <div class="footer-badges">
+                    <span class="badge-pill"><i class="fa-solid fa-circle text-success" style="color: #00e676;"></i> Server Status: Online (8080)</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

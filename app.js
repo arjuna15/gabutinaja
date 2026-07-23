@@ -634,6 +634,9 @@ function initNavigation() {
         }
         localStorage.setItem('streamx_watchlist', JSON.stringify(state.watchlist));
         updateFavCount();
+        if (state.currentTab === 'watchlist') renderMovies();
+    });
+
     // Season Dropdown Change
     if (elements.seasonSelect) {
         elements.seasonSelect.addEventListener('change', (e) => {

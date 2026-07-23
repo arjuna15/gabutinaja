@@ -229,14 +229,20 @@ const elements = {
 };
 
 // Initialize App
-document.addEventListener('DOMContentLoaded', () => {
+function startApp() {
     initNavigation();
     initGenreChips();
     initSearch();
     initModals();
     updateFavCount();
     loadCatalogDatabase();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startApp);
+} else {
+    startApp();
+}
 
 // Fetch Comprehensive Catalog Database (catalog.json)
 async function loadCatalogDatabase() {

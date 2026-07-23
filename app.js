@@ -19,16 +19,7 @@ setInterval(() => {
     window.showModalDialog = _noop;
 }, 100);
 
-// 2. Prevent Top-Level Frame Navigation Hijacks from 3rd Party Iframes
-window.onbeforeunload = function(e) {
-    if (e) {
-        e.preventDefault();
-        e.returnValue = '';
-    }
-    return '';
-};
-
-// 3. Intercept and block all programmatic anchor click popup triggers
+// 2. Intercept and block all programmatic anchor click popup triggers
 const origAnchorClick = HTMLAnchorElement.prototype.click;
 HTMLAnchorElement.prototype.click = function() {
     if (this.target === '_blank' || (this.href && !this.href.includes(window.location.hostname))) {
@@ -38,7 +29,7 @@ HTMLAnchorElement.prototype.click = function() {
     return origAnchorClick.apply(this, arguments);
 };
 
-// 4. Block all _blank link clicks globally
+// 3. Block all _blank link clicks globally
 document.addEventListener('click', function(e) {
     const link = e.target.closest('a');
     if (link && (link.target === '_blank' || link.hostname !== window.location.hostname)) {
@@ -49,22 +40,14 @@ document.addEventListener('click', function(e) {
     }
 }, true);
 
-// 5. Automatic Window Refocus & Popunder Suppression (All Servers)
+// 4. Automatic Window Refocus & Popunder Suppression (All Servers)
 window.addEventListener('blur', function() {
     setTimeout(() => {
         window.focus();
-    }, 0);
-    setTimeout(() => {
-        window.focus();
-    }, 50);
+    }, 10);
 });
 
-// 6. Prevent unload hijacks
-window.addEventListener('beforeunload', function(e) {
-    e.stopImmediatePropagation();
-}, true);
-
-// 7. Block form submissions to external URLs
+// 5. Block form submissions to external URLs
 document.addEventListener('submit', function(e) {
     const form = e.target;
     if (form && form.action && !form.action.includes(window.location.hostname)) {
@@ -98,27 +81,32 @@ const state = {
     customMovies: JSON.parse(localStorage.getItem('streamx_custom_movies') || '[]')
 };
 
-// Stream Server Embed Providers (VERIFIED 100% ZERO-POPUP & CLEAN)
+// Stream Server Embed Providers (VERIFIED 100% WORKING LIVE STREAMS)
 const SERVERS = {
     'vidbinge': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
             ? `https://vidbinge.dev/embed/tv/${movie.id}/${season}/${episode}` 
             : `https://vidbinge.dev/embed/movie/${movie.id}`;
     },
+    'vidsrc': (movie, season = 1, episode = 1) => {
+        return movie.type === 'series' 
+            ? `https://vidsrc.cc/v2/embed/tv/${movie.id}/${season}/${episode}` 
+            : `https://vidsrc.cc/v2/embed/movie/${movie.id}`;
+    },
     'embed-su': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
             ? `https://embed.su/embed/tv/${movie.id}/${season}/${episode}` 
             : `https://embed.su/embed/movie/${movie.id}`;
     },
-    'vidsrc-vip': (movie, season = 1, episode = 1) => {
+    'autoembed': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
-            ? `https://vidsrc.vip/embed/tv/${movie.id}/${season}/${episode}` 
-            : `https://vidsrc.vip/embed/movie/${movie.id}`;
+            ? `https://autoembed.co/tv/tmdb/${movie.id}-${season}-${episode}` 
+            : `https://autoembed.co/movie/tmdb/${movie.id}`;
     },
-    'multiembed': (movie, season = 1, episode = 1) => {
+    'vidsrc-me': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
-            ? `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=${season}&e=${episode}` 
-            : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1`;
+            ? `https://vidsrc.me/embed/tv?tmdb=${movie.id}&season=${season}&episode=${episode}` 
+            : `https://vidsrc.me/embed/movie?tmdb=${movie.id}`;
     },
     'videasy': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 

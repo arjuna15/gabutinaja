@@ -511,48 +511,103 @@ body {
     border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* Year Filter Glass Dropdown */
-.year-filter-box {
+/* Custom Apple Glass Dropdown Component */
+.custom-glass-dropdown {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(14px);
-    border: 1px solid var(--glass-border-bright);
-    border-radius: var(--radius-full);
-    padding: 0.45rem 1.1rem;
-    box-shadow: var(--glass-shadow);
-    transition: var(--transition);
+    display: inline-block;
+    z-index: 50;
 }
 
-.year-filter-box:hover {
-    background: rgba(255, 255, 255, 0.14);
+.glass-dropdown-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border-bright);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.55rem 1.2rem;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--glass-shadow);
+}
+
+.glass-dropdown-trigger:hover {
+    background: rgba(255, 255, 255, 0.16);
     border-color: rgba(255, 255, 255, 0.6);
     transform: translateY(-2px);
 }
 
-.year-icon {
+.dropdown-arrow {
+    font-size: 0.75rem;
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    margin-right: 0.5rem;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.year-dropdown {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #ffffff;
+.custom-glass-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.glass-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 240px;
+    background: rgba(12, 15, 22, 0.94);
+    backdrop-filter: var(--glass-blur-heavy);
+    -webkit-backdrop-filter: var(--glass-blur-heavy);
+    border: 1px solid var(--glass-border-bright);
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    z-index: 100;
+    animation: dropdownSlideDown 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 1rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
     font-family: var(--font-heading);
     font-weight: 700;
     font-size: 0.88rem;
     cursor: pointer;
-    padding-right: 0.5rem;
+    transition: var(--transition-fast);
 }
 
-.year-dropdown option {
-    background: #07090e;
+.glass-dropdown-item i:first-child {
+    margin-right: 0.5rem;
+    width: 18px;
+    text-align: center;
+}
+
+.glass-dropdown-item .check-mark {
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: var(--transition-fast);
+}
+
+.glass-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.12);
     color: #ffffff;
-    padding: 0.5rem;
+}
+
+.glass-dropdown-item.active {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.08) 100%);
+    color: #ffffff;
+    border: 1px solid var(--glass-border-silver);
+}
+
+.glass-dropdown-item.active .check-mark {
+    opacity: 1;
 }
 
 /* Filter Chips Section */

@@ -713,7 +713,7 @@ function updateFavCount() {
     if (mobileFavCount) mobileFavCount.textContent = state.watchlist.length;
 }
 
-// Genre & Year Filter Handlers
+// Genre & Custom Apple Glass Year Filter Handlers
 function initGenreChips() {
     document.querySelectorAll('.chip').forEach(chip => {
         chip.addEventListener('click', () => {
@@ -725,11 +725,53 @@ function initGenreChips() {
         });
     });
 
-    if (elements.yearFilter) {
-        elements.yearFilter.addEventListener('change', (e) => {
-            state.currentYear = e.target.value;
-            state.currentPage = 1; // Reset to page 1 on year change
-            renderMovies();
+    // Custom Apple Glass Year Dropdown Component Handler
+    const dropdownContainer = document.getElementById('custom-year-dropdown');
+    const dropdownTrigger = document.getElementById('year-dropdown-trigger');
+    const dropdownMenu = document.getElementById('year-dropdown-menu');
+    const selectedYearLabel = document.getElementById('selected-year-label');
+
+    if (dropdownTrigger && dropdownMenu && dropdownContainer) {
+        dropdownTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = dropdownContainer.classList.contains('open');
+            if (isOpen) {
+                dropdownContainer.classList.remove('open');
+                dropdownMenu.classList.add('hidden');
+            } else {
+                dropdownContainer.classList.add('open');
+                dropdownMenu.classList.remove('hidden');
+            }
+        });
+
+        document.querySelectorAll('.glass-dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const selectedYear = item.dataset.year;
+                const spanEl = item.querySelector('span');
+                const itemText = spanEl ? spanEl.textContent : item.textContent;
+
+                document.querySelectorAll('.glass-dropdown-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                if (selectedYearLabel) {
+                    selectedYearLabel.textContent = selectedYear === 'all' ? '🗓️ Semua Tahun (2020 - 2026)' : `🗓️ ${itemText}`;
+                }
+
+                state.currentYear = selectedYear;
+                state.currentPage = 1;
+                dropdownContainer.classList.remove('open');
+                dropdownMenu.classList.add('hidden');
+                renderMovies();
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!dropdownContainer.contains(e.target)) {
+                dropdownContainer.classList.remove('open');
+                dropdownMenu.classList.add('hidden');
+            }
         });
     }
 }

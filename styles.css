@@ -310,10 +310,11 @@ body {
     padding: 0 1.5rem;
 }
 
-/* Hero Clay Section */
+/* Hero Clay Section (Ultra Responsive Banner) */
 .hero-section {
     position: relative;
-    height: 500px;
+    min-height: 480px;
+    height: auto;
     border-radius: var(--radius-lg);
     overflow: hidden;
     margin-bottom: 3rem;
@@ -325,30 +326,32 @@ body {
 
 .hero-backdrop {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     background-size: cover;
-    background-position: center top;
+    background-position: center 25%;
     transition: background-image 0.6s ease-in-out;
 }
 
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(0deg, var(--bg-dark) 0%, rgba(13, 17, 25, 0.75) 50%, rgba(13, 17, 25, 0.2) 100%);
+    background: linear-gradient(180deg, rgba(13, 17, 25, 0.25) 0%, rgba(13, 17, 25, 0.65) 45%, rgba(13, 17, 25, 0.96) 100%),
+                linear-gradient(90deg, rgba(13, 17, 25, 0.9) 0%, rgba(13, 17, 25, 0.45) 60%, transparent 100%);
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
     padding: 3rem;
-    max-width: 800px;
+    max-width: 760px;
+    width: 100%;
 }
 
 .hero-badges {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.7rem;
     margin-bottom: 1rem;
 }
@@ -386,9 +389,10 @@ body {
     font-family: var(--font-heading);
     font-size: 3.2rem;
     font-weight: 900;
-    line-height: 1.1;
+    line-height: 1.15;
     margin-bottom: 1rem;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+    word-break: break-word;
 }
 
 .hero-overview {
@@ -398,6 +402,7 @@ body {
     margin-bottom: 1.5rem;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1242,6 +1247,16 @@ body {
 
 /* 1. Large Laptops & Desktop Monitors (1200px and up) */
 @media (min-width: 1200px) {
+    .hero-section {
+        min-height: 520px;
+    }
+    .hero-content {
+        padding: 3.5rem;
+        max-width: 820px;
+    }
+    .hero-title {
+        font-size: 3.5rem;
+    }
     .movie-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1.8rem;
@@ -1270,11 +1285,30 @@ body {
     }
 
     .hero-section {
-        height: 440px;
+        min-height: 420px;
+        margin-bottom: 2.5rem;
+    }
+
+    .hero-content {
+        padding: 2.2rem 2rem;
+        max-width: 680px;
     }
 
     .hero-title {
         font-size: 2.3rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .hero-overview {
+        font-size: 0.95rem;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        margin-bottom: 1.2rem;
+    }
+
+    .hero-meta {
+        gap: 1.2rem;
+        margin-bottom: 1.4rem;
     }
 
     .movie-grid {
@@ -1344,35 +1378,64 @@ body {
         width: 100%;
     }
 
+    /* Hero Section Mobile Optimization */
     .hero-section {
-        height: 380px;
-        padding: 1.5rem 1rem;
+        min-height: 350px;
+        padding: 0;
         margin-top: 1rem;
+        margin-bottom: 2rem;
         border-radius: var(--radius-md);
     }
 
+    .hero-content {
+        padding: 1.5rem 1.2rem;
+        max-width: 100%;
+    }
+
+    .hero-badges {
+        gap: 0.4rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .badge {
+        padding: 0.3rem 0.75rem;
+        font-size: 0.72rem;
+    }
+
     .hero-title {
-        font-size: 1.7rem;
-        line-height: 1.25;
+        font-size: 1.65rem;
+        line-height: 1.2;
+        margin-bottom: 0.6rem;
     }
 
     .hero-overview {
         font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
         -webkit-line-clamp: 2;
         line-clamp: 2;
+    }
 
+    .hero-meta {
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        font-size: 0.82rem;
+        margin-bottom: 1.2rem;
     }
 
     .hero-buttons {
-        flex-direction: column;
+        flex-direction: row;
         gap: 0.6rem;
         width: 100%;
     }
 
     .btn-play, .btn-info {
-        width: 100%;
+        flex: 1;
+        width: auto;
         justify-content: center;
-        padding: 0.7rem 1rem;
+        padding: 0.7rem 0.8rem;
+        font-size: 0.82rem;
+        white-space: nowrap;
     }
 
     .filter-section {

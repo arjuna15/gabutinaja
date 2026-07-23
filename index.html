@@ -267,42 +267,51 @@
 
 
 
-    <!-- Footer -->
+    <!-- Apple Glass Footer -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-top">
                 <div class="footer-brand-box">
                     <img src="logo-white-text.png" alt="gabutin aja" class="footer-logo-img">
-                    <p class="footer-desc">Platform streaming media lokal tanpa gangguan iklan. Nikmati 14,000+ film, serial TV, anime, dan drama Korea kualitas HD gratis.</p>
+                    <p class="footer-desc">Platform streaming media lokal tercepat tanpa gangguan iklan. Nikmati 14,620+ film, serial TV, anime, dan drama Korea kualitas 1080p Full HD gratis.</p>
+                    <div class="footer-server-status">
+                        <span class="status-dot"></span>
+                        <span>Server Local Host: <strong>Online (Port 8080)</strong></span>
+                    </div>
                 </div>
 
                 <div class="footer-nav">
                     <div class="footer-col">
-                        <h4>Navigasi Menu</h4>
+                        <h4><i class="fa-solid fa-compass"></i> Navigasi Pintar</h4>
                         <ul>
-                            <li><a href="#" onclick="document.querySelector('[data-tab=home]').click(); return false;"><i class="fa-solid fa-house"></i> Beranda</a></li>
-                            <li><a href="#" onclick="document.querySelector('[data-tab=movies]').click(); return false;"><i class="fa-solid fa-film"></i> Katalog Film</a></li>
-                            <li><a href="#" onclick="document.querySelector('[data-tab=series]').click(); return false;"><i class="fa-solid fa-tv"></i> Serial TV & Anime</a></li>
-                            <li><a href="#" onclick="document.querySelector('[data-tab=trending]').click(); return false;"><i class="fa-solid fa-fire"></i> Paling Populer</a></li>
+                            <li><a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;"><i class="fa-solid fa-house"></i> Beranda Utama</a></li>
+                            <li><a href="#" onclick="document.querySelector('[data-tab=movies]').click(); return false;"><i class="fa-solid fa-film"></i> Katalog Film (8,600+)</a></li>
+                            <li><a href="#" onclick="document.querySelector('[data-tab=series]').click(); return false;"><i class="fa-solid fa-tv"></i> Serial TV & Anime (6,000+)</a></li>
+                            <li><a href="#" onclick="document.querySelector('[data-tab=trending]').click(); return false;"><i class="fa-solid fa-fire"></i> Tayangan Populer</a></li>
+                            <li><a href="#" onclick="document.querySelector('[data-tab=watchlist]').click(); return false;"><i class="fa-solid fa-bookmark"></i> Koleksi Favorit Saya</a></li>
                         </ul>
                     </div>
 
                     <div class="footer-col">
-                        <h4>Keunggulan</h4>
+                        <h4><i class="fa-solid fa-shield-halved"></i> Keunggulan Platform</h4>
                         <ul>
-                            <li><span><i class="fa-solid fa-shield-halved text-gradient"></i> Bebas Iklan Popup</span></li>
-                            <li><span><i class="fa-solid fa-bolt text-gradient"></i> Multi-Server Cepat</span></li>
-                            <li><span><i class="fa-solid fa-film text-gradient"></i> 14,000+ Koleksi</span></li>
-                            <li><span><i class="fa-solid fa-wand-magic-sparkles text-gradient"></i> 3D Claymorphism UI</span></li>
+                            <li><span><i class="fa-solid fa-shield"></i> 100% Bebas Iklan Popup</span></li>
+                            <li><span><i class="fa-solid fa-bolt"></i> 5 Multi-Server Ultra Fast</span></li>
+                            <li><span><i class="fa-solid fa-layer-group"></i> Selector Season & Episode</span></li>
+                            <li><span><i class="fa-solid fa-filter"></i> Filter Tahun & Genre Multi</span></li>
+                            <li><span><i class="fa-solid fa-mobile-screen-button"></i> Apple Liquid Glass UI</span></li>
                         </ul>
                     </div>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p class="copyright">&copy; 2026 <strong>gabutin aja</strong>. Personal Local Media Streaming Platform.</p>
-                <div class="footer-badges">
-                    <span class="badge-pill"><i class="fa-solid fa-circle text-success" style="color: #00e676;"></i> Server Status: Online (8080)</span>
+                <p class="copyright">&copy; 2026 <strong>gabutin aja</strong>. Personal Media Streaming Platform. Developed with Apple Liquid Glass Design System.</p>
+                <div class="footer-bottom-actions">
+                    <span class="badge-pill"><i class="fa-brands fa-github"></i> github.com/arjuna15/gabutinaja</span>
+                    <button class="back-to-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" aria-label="Ke Atas">
+                        <i class="fa-solid fa-arrow-up"></i> Ke Atas
+                    </button>
                 </div>
             </div>
         </div>

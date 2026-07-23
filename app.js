@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadCatalogDatabase() {
     elements.movieGrid.innerHTML = createSkeletons(12);
     try {
-        const response = await fetch('./catalog.json');
+        const response = await fetch('./catalog.json?t=' + Date.now());
         if (response.ok) {
             const data = await response.json();
             state.movies = [...state.customMovies, ...data];

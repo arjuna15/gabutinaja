@@ -1392,7 +1392,7 @@ body {
         font-size: 3.5rem;
     }
     .movie-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
         gap: 1.8rem;
     }
 }
@@ -1445,7 +1445,7 @@ body {
     }
 
     .movie-grid {
-        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 1.2rem;
     }
 

@@ -1236,21 +1236,266 @@ body {
     padding: 0 0.4rem;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
+/* ============================================================
+   📱💻🖥️ FULL DEVICE RESPONSIVE BREAKPOINTS (PC, Laptop, Tablet, Mobile)
+   ============================================================ */
+
+/* 1. Large Laptops & Desktop Monitors (1200px and up) */
+@media (min-width: 1200px) {
+    .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.8rem;
+    }
+}
+
+/* 2. Tablets & Medium Screen Laptops (768px to 1199px) */
+@media (max-width: 1199px) and (min-width: 768px) {
+    .navbar {
+        top: 10px;
+        padding: 0 0.8rem;
+    }
+
     .nav-container {
-        flex-wrap: wrap;
+        padding: 0.7rem 1.2rem;
+        gap: 1rem;
     }
-    .hero-title {
-        font-size: 2.2rem;
+
+    .brand-logo-img {
+        height: 52px;
+        max-width: 210px;
     }
+
+    .search-box {
+        width: 220px;
+    }
+
     .hero-section {
-        height: 420px;
+        height: 440px;
     }
-    .movie-detail-grid {
+
+    .hero-title {
+        font-size: 2.3rem;
+    }
+
+    .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 1.2rem;
+    }
+
+    .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+    }
+
+    .footer-logo-img {
+        height: 110px;
+    }
+}
+
+/* 3. Mobile Phones & Small Tablets (up to 767px) */
+@media (max-width: 767px) {
+    body {
+        padding-bottom: 2rem;
+    }
+
+    .navbar {
+        top: 5px;
+        padding: 0 0.5rem;
+    }
+
+    .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.8rem 1rem;
+        gap: 0.8rem;
+        border-radius: var(--radius-md);
+    }
+
+    .nav-brand {
+        justify-content: center;
+    }
+
+    .brand-logo-img {
+        height: 44px;
+        max-width: 190px;
+    }
+
+    .nav-menu {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 6px;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .nav-link {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .nav-actions {
+        width: 100%;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .hero-section {
+        height: 380px;
+        padding: 1.5rem 1rem;
+        margin-top: 1rem;
+        border-radius: var(--radius-md);
+    }
+
+    .hero-title {
+        font-size: 1.7rem;
+        line-height: 1.25;
+    }
+
+    .hero-overview {
+        font-size: 0.85rem;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 0.6rem;
+        width: 100%;
+    }
+
+    .btn-play, .btn-info {
+        width: 100%;
+        justify-content: center;
+        padding: 0.7rem 1rem;
+    }
+
+    .filter-section {
+        margin-top: 1.5rem;
+    }
+
+    .genre-chips {
+        padding-bottom: 8px;
+    }
+
+    .chip {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+    }
+
+    /* 2 Columns Movie Grid on Mobile Phones */
+    .movie-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+
+    .movie-card {
+        border-radius: var(--radius-sm);
+    }
+
+    .card-info {
+        padding: 0.7rem;
+    }
+
+    .card-title {
+        font-size: 0.85rem;
+    }
+
+    .card-meta {
+        font-size: 0.75rem;
+    }
+
+    /* Player Modal on Mobile */
+    .player-modal-container {
+        width: 96vw;
+        padding: 1rem;
+        max-height: 94vh;
+        overflow-y: auto;
+    }
+
+    .server-buttons {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 6px;
+    }
+
+    .server-btn {
+        padding: 0.45rem 0.8rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .season-picker {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .season-dropdown {
+        width: 100%;
+    }
+
+    .ep-btn {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
+    }
+
+    /* Page Pagination on Mobile */
+    .pagination-container {
+        gap: 0.3rem;
+        margin: 2rem 0 1rem 0;
+    }
+
+    .page-btn {
+        padding: 0.45rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .nav-page-btn {
+        padding: 0.45rem 0.9rem;
+    }
+
+    /* Footer on Mobile */
+    .footer {
+        padding: 2.5rem 1rem 1.5rem 1rem;
+        margin-top: 3.5rem;
+    }
+
+    .footer-top {
         grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
     }
-    .movie-poster-sm {
-        display: none;
+
+    .footer-brand-box {
+        align-items: center;
+    }
+
+    .footer-logo-img {
+        height: 90px;
+        max-width: 240px;
+    }
+
+    .footer-nav {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
+    }
+
+    .footer-col ul {
+        align-items: center;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
     }
 }

@@ -755,7 +755,7 @@ function initGenreChips() {
                 item.classList.add('active');
 
                 if (selectedYearLabel) {
-                    selectedYearLabel.textContent = selectedYear === 'all' ? '🗓️ Semua Tahun (2020 - 2026)' : `🗓️ ${itemText}`;
+                    selectedYearLabel.textContent = selectedYear === 'all' ? 'Semua Tahun (2020 - 2026)' : itemText;
                 }
 
                 state.currentYear = selectedYear;

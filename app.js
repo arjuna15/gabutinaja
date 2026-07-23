@@ -563,27 +563,21 @@ function loadServerStream(serverKey) {
     });
 
     elements.playerLoader.classList.remove('hidden');
+    if (adShield) adShield.classList.add('hidden');
 
-    const providerFn = SERVERS[serverKey] || SERVERS['videasy'];
+    const providerFn = SERVERS[serverKey] || SERVERS['vidbinge'];
     const streamUrl = providerFn(state.activeMovie, state.currentSeason, state.currentEpisode);
     
     elements.streamIframe.src = streamUrl;
 
-    // Hide loader on iframe load + activate click shield
-    elements.streamIframe.onload = () => {
+    // Instantly hide loader once iframe URL is assigned or loaded
+    const hideLoader = () => {
         elements.playerLoader.classList.add('hidden');
-        // Hide the manual ad-shield since we have auto click-shield now
         if (adShield) adShield.classList.add('hidden');
-        // Setup transparent click absorber
-        setupClickShield();
     };
-    
-    // Timeout fallback
-    setTimeout(() => {
-        elements.playerLoader.classList.add('hidden');
-        if (adShield) adShield.classList.add('hidden');
-        setupClickShield();
-    }, 2500);
+
+    elements.streamIframe.onload = hideLoader;
+    setTimeout(hideLoader, 800);
 }
 
 // Navigation Tabs & Mobile Dropdown Handler

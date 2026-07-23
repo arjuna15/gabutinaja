@@ -1,0 +1,5 @@
+# robots.txt for gabutin aja
+User-agent: *
+Allow: /
+
+Sitemap: https://arjuna15.github.io/gabutinaja/sitemap.xml

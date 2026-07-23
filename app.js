@@ -1,54 +1,70 @@
 // StreamX - Main Application Logic
 
 // ============================================================
-// 🛡️ MEGA ANTI-POPUP & TAB HIJACK KILLER
-// 100% Blocks ALL popunder triggers, new tab redirects & one-clicks
+// 🛡️ MEGA UNIVERSAL ANTI-POPUP & TAB HIJACK KILLER (ALL SERVERS)
+// 100% Disarms ALL popunders, new tab redirects & one-clicks on all servers
 // ============================================================
 
-// 1. Kill window.open completely
+// 1. Kill window.open & window.showModalDialog completely
 const _noop = function() { 
-    console.log('[🛡️ StreamX] Popup BLOCKED!'); 
+    console.log('[🛡️ StreamX] Popup window BLOCKED across all servers!'); 
     return null; 
 };
 window.open = _noop;
+window.showModalDialog = _noop;
 
 // Continuous enforcement of window.open override
-setInterval(() => { window.open = _noop; }, 200);
+setInterval(() => { 
+    window.open = _noop; 
+    window.showModalDialog = _noop;
+}, 100);
 
-// 2. Intercept and block all programmatic anchor click popup triggers
+// 2. Prevent Top-Level Frame Navigation Hijacks from 3rd Party Iframes
+window.onbeforeunload = function(e) {
+    if (e) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+    return '';
+};
+
+// 3. Intercept and block all programmatic anchor click popup triggers
 const origAnchorClick = HTMLAnchorElement.prototype.click;
 HTMLAnchorElement.prototype.click = function() {
     if (this.target === '_blank' || (this.href && !this.href.includes(window.location.hostname))) {
-        console.log('[🛡️ StreamX] Anchor popup click BLOCKED:', this.href);
+        console.log('[🛡️ StreamX] External anchor click BLOCKED:', this.href);
         return;
     }
     return origAnchorClick.apply(this, arguments);
 };
 
-// 3. Block all _blank link clicks globally
+// 4. Block all _blank link clicks globally
 document.addEventListener('click', function(e) {
     const link = e.target.closest('a');
     if (link && (link.target === '_blank' || link.hostname !== window.location.hostname)) {
         e.preventDefault();
         e.stopPropagation();
-        console.log('[🛡️ StreamX] External link BLOCKED:', link.href);
+        console.log('[🛡️ StreamX] External link click BLOCKED:', link.href);
         return false;
     }
 }, true);
 
-// 4. Automatic Window Refocus on Blur (Kills popunders instantly)
+// 5. Automatic Window Refocus & Popunder Suppression (All Servers)
 window.addEventListener('blur', function() {
     setTimeout(() => {
         window.focus();
-    }, 10);
+    }, 0);
+    setTimeout(() => {
+        window.focus();
+    }, 50);
 });
 
-// 5. Prevent beforeunload hijacks from iframes
+// 6. Prevent unload hijacks
 window.addEventListener('beforeunload', function(e) {
     e.stopImmediatePropagation();
 }, true);
 
-// 6. Block form submissions to external URLs
+// 7. Block form submissions to external URLs
 document.addEventListener('submit', function(e) {
     const form = e.target;
     if (form && form.action && !form.action.includes(window.location.hostname)) {

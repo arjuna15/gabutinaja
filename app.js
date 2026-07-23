@@ -240,23 +240,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Fetch Comprehensive Catalog Database (catalog.json)
 async function loadCatalogDatabase() {
-    elements.movieGrid.innerHTML = createSkeletons(12);
+    if (elements.movieGrid) {
+        elements.movieGrid.innerHTML = createSkeletons(12);
+    }
     try {
         const response = await fetch('./catalog.json?t=' + Date.now());
         if (response.ok) {
             const data = await response.json();
-            state.movies = [...state.customMovies, ...data];
-            console.log(`Loaded ${data.length} movies from local catalog database!`);
+            if (Array.isArray(data)) {
+                state.movies = [...state.customMovies, ...data.filter(item => item && typeof item === 'object' && item.id)];
+                console.log(`Loaded ${state.movies.length} movies from catalog database!`);
+            } else {
+                throw new Error('Catalog data is not an array');
+            }
         } else {
-            throw new Error('Local catalog.json not found yet, fetching live fallback');
+            throw new Error('Local catalog.json HTTP ' + response.status);
         }
     } catch (err) {
-        console.warn('Fallback to live TMDB requests:', err);
-        await loadMoviesLive('/trending/all/day');
+        console.warn('Catalog load error, using fallback:', err);
+        try {
+            await loadMoviesLive('/trending/all/day');
+        } catch (e) {
+            state.movies = [...state.customMovies, ...DEMO_MOVIES];
+        }
     }
 
-    renderMovies();
-    setupHeroBanner();
+    try {
+        renderMovies();
+    } catch (e) {
+        console.error('Error rendering movies:', e);
+    }
+
+    try {
+        setupHeroBanner();
+    } catch (e) {
+        console.error('Error setting up hero banner:', e);
+    }
 }
 
 // Fallback Live TMDB Fetcher
@@ -266,15 +285,15 @@ async function loadMoviesLive(endpoint = '/trending/all/day') {
         if (!response.ok) throw new Error('API Request Failed');
         const data = await response.json();
         
-        state.movies = [...state.customMovies, ...data.results.map(item => ({
+        state.movies = [...state.customMovies, ...(data.results || []).map(item => ({
             id: item.id,
-            title: item.title || item.name,
+            title: item.title || item.name || 'Untitled',
             type: item.media_type || (item.title ? 'movie' : 'series'),
-            release_date: item.release_date || item.first_air_date || '2024',
+            release_date: (item.release_date || item.first_air_date || '2026').substring(0, 4),
             vote_average: item.vote_average ? item.vote_average.toFixed(1) : '8.0',
             overview: item.overview || 'Sinopsis belum tersedia.',
-            poster_path: item.poster_path ? `${CONFIG.IMAGE_BASE_URL}${item.poster_path}` : 'https://via.placeholder.com/500x750.png?text=No+Poster',
-            backdrop_path: item.backdrop_path ? `${CONFIG.BACKDROP_BASE_URL}${item.backdrop_path}` : 'https://via.placeholder.com/1200x600.png?text=StreamX',
+            poster_path: item.poster_path ? `${CONFIG.IMAGE_BASE_URL}${item.poster_path}` : 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=500&auto=format&fit=crop',
+            backdrop_path: item.backdrop_path ? `${CONFIG.BACKDROP_BASE_URL}${item.backdrop_path}` : 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1200&auto=format&fit=crop',
             genre_ids: item.genre_ids || []
         }))];
     } catch (err) {

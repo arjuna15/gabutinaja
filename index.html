@@ -142,22 +142,63 @@
         </section>
     </main>
 
-    <!-- Player Modal (Iframe Streaming Container) -->
+    <!-- Player Modal (Apple Glass Widescreen Streaming Container) -->
     <div class="modal-backdrop hidden" id="player-modal">
         <div class="modal-container player-modal-container">
+            <!-- Modal Top Header Bar -->
             <div class="modal-header">
                 <div class="modal-title-info">
                     <h3 id="modal-movie-title">Nama Film</h3>
-                    <span id="modal-movie-subtitle" class="text-muted">2024 • Action, Sci-Fi</span>
+                    <div class="modal-subtitle-badges">
+                        <span class="badge badge-year" id="modal-movie-subtitle">2024 • Movie</span>
+                        <span class="badge badge-quality"><i class="fa-solid fa-star rating-star"></i> <strong id="modal-rating">8.5</strong></span>
+                    </div>
                 </div>
-                <button class="modal-close-btn" id="close-player-modal"><i class="fa-solid fa-xmark"></i></button>
+                <div class="modal-header-actions">
+                    <button id="modal-fav-btn" class="btn-fav-glass"><i class="fa-regular fa-bookmark"></i> Tambah Favorit</button>
+                    <button class="modal-close-btn" id="close-player-modal"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+
+            <!-- Video Player Box -->
+            <div class="video-player-wrapper" id="player-wrapper">
+                <div class="player-loader hidden" id="player-loader">
+                    <div class="spinner"></div>
+                    <p>Memuat Stream Video...</p>
+                </div>
+
+                <!-- Anti-PopUp Click Shield Overlay -->
+                <div class="ad-shield-overlay" id="ad-shield">
+                    <div class="shield-content">
+                        <i class="fa-solid fa-shield-halved shield-icon"></i>
+                        <h3>gabutin aja Anti-Popup Shield Active</h3>
+                        <p>Klik tombol di bawah untuk mengaktifkan pemutar tanpa mementalkan tab/popup iklan.</p>
+                        <button id="activate-stream-btn" class="btn-shield-play"><i class="fa-solid fa-play"></i> Buka Pemutar (Anti-PopUp)</button>
+                    </div>
+                </div>
+                
+                <!-- Dynamic Iframe Embed Player -->
+                <iframe id="stream-iframe" 
+                        src="" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        allowfullscreen 
+                        allow="autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        referrerpolicy="no-referrer">
+                </iframe>
+
+                <!-- Native HTML5 Video Player -->
+                <video id="native-video" class="hidden" controls autoplay style="width:100%; height:100%; object-fit:contain; background:#000;">
+                    <source id="native-video-source" src="" type="video/mp4">
+                    Browser Anda tidak mendukung pemutar video HTML5.
+                </video>
             </div>
 
             <!-- Server Selector Bar -->
             <div class="server-selector-bar">
-                <span class="server-label"><i class="fa-solid fa-server"></i> Pilih Stream Server:</span>
+                <span class="server-label"><i class="fa-solid fa-server"></i> Server Stream:</span>
                 <div class="server-buttons" id="server-list">
-                    <button class="server-btn active" data-server="vidbinge"><i class="fa-solid fa-shield-cat"></i> Server 1 (VidBinge - Zero Ads)</button>
+                    <button class="server-btn active" data-server="vidbinge"><i class="fa-solid fa-bolt"></i> Server 1 (VidBinge - Zero Ads)</button>
                     <button class="server-btn" data-server="embed-su">Server 2 (Embed.su)</button>
                     <button class="server-btn" data-server="vidsrc-vip">Server 3 (VidSrc.vip)</button>
                     <button class="server-btn" data-server="multiembed">Server 4 (MultiEmbed)</button>
@@ -191,66 +232,28 @@
                 </div>
             </div>
 
-            <!-- Video Player Box -->
-            <div class="video-player-wrapper" id="player-wrapper">
-                <div class="player-loader hidden" id="player-loader">
-                    <div class="spinner"></div>
-                    <p>Memuat Stream Video...</p>
-                </div>
-
-                <!-- Anti-PopUp Click Shield Overlay -->
-                <div class="ad-shield-overlay" id="ad-shield">
-                    <div class="shield-content">
-                        <i class="fa-solid fa-shield-halved shield-icon"></i>
-                        <h3>gabutin aja Ad-Shield Active</h3>
-                        <p>Klik tombol di bawah untuk mengaktifkan pemutar tanpa memicu tab/popup baru.</p>
-                        <button id="activate-stream-btn" class="btn-shield-play"><i class="fa-solid fa-play"></i> Buka Pemutar (Anti-PopUp)</button>
-                    </div>
-                </div>
-                
-                <!-- Dynamic Iframe Embed Player -->
-                <iframe id="stream-iframe" 
-                        src="" 
-                        frameborder="0" 
-                        scrolling="no" 
-                        allowfullscreen 
-                        allow="autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        referrerpolicy="no-referrer">
-                </iframe>
-
-                <!-- Native HTML5 Video Player (for direct MP4/HLS links) -->
-                <video id="native-video" class="hidden" controls autoplay style="width:100%; height:100%; object-fit:contain; background:#000;">
-                    <source id="native-video-source" src="" type="video/mp4">
-                    Browser Anda tidak mendukung pemutar video HTML5.
-                </video>
-            </div>
-
             <!-- Custom URL Drawer (Expandable) -->
             <div class="custom-url-box hidden" id="custom-url-box">
                 <label for="custom-iframe-input"><i class="fa-solid fa-terminal"></i> Masukkan Link Iframe / Stream Embed / File Lokal:</label>
                 <div class="input-group">
-                    <input type="text" id="custom-iframe-input" placeholder="https://domain-anda.com/embed/movie.mp4 atau https://vidsrc.to/embed/movie/...">
+                    <input type="text" id="custom-iframe-input" placeholder="https://domain-anda.com/embed/movie.mp4">
                     <button id="apply-custom-url" class="btn-primary"><i class="fa-solid fa-play"></i> Putar</button>
                 </div>
-                <p class="help-text"><i class="fa-solid fa-lightbulb"></i> Anda bisa memasukkan URL video `.mp4`, `.m3u8`, link embed iframe pihak ke-3, atau server lokal Anda sendiri (seperti HLS stream lokal `http://localhost:8000/stream`).</p>
+                <p class="help-text"><i class="fa-solid fa-lightbulb"></i> Anda bisa memasukkan URL video `.mp4`, `.m3u8`, link embed iframe pihak ke-3, atau server lokal Anda sendiri.</p>
             </div>
 
-            <!-- Controls & Information below Player -->
+            <!-- Movie Details Glass Card Container -->
             <div class="modal-body-info">
                 <div class="movie-detail-grid">
                     <div class="movie-poster-sm">
                         <img id="modal-poster" src="" alt="Poster">
                     </div>
                     <div class="movie-details">
-                        <div class="rating-bar">
-                            <span class="rating-badge"><i class="fa-solid fa-star"></i> <span id="modal-rating">8.5</span></span>
-                            <button id="modal-fav-btn" class="btn-fav"><i class="fa-regular fa-bookmark"></i> Tambah ke Favorit</button>
-                        </div>
-                        <h4>Sinopsis</h4>
-                        <p id="modal-overview">Deskripsi film akan muncul di sini.</p>
+                        <h4>Sinopsis & Ringkasan Cerita</h4>
+                        <p id="modal-overview">Sinopsis tayangan akan diposisikan dengan rapi di sini.</p>
                         <div class="meta-row">
-                            <div><strong>Bahasa:</strong> <span id="modal-lang">English</span></div>
-                            <div><strong>Status:</strong> Released</div>
+                            <div><i class="fa-solid fa-globe"></i> <strong>Bahasa:</strong> <span id="modal-lang">Indonesia / English (Sub Indo)</span></div>
+                            <div><i class="fa-solid fa-shield-halved"></i> <strong>Kualitas:</strong> 1080p Full HD (Zero Ads)</div>
                         </div>
                     </div>
                 </div>

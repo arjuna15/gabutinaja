@@ -68,6 +68,7 @@ const CONFIG = {
 const state = {
     currentTab: 'home',
     currentGenre: 'all',
+    currentYear: 'all',
     searchQuery: '',
     currentPage: 1,
     isLoadingMore: false,
@@ -188,6 +189,7 @@ const elements = {
     resultCount: document.getElementById('result-count'),
     sectionTitle: document.getElementById('section-title'),
     favCount: document.getElementById('fav-count'),
+    yearFilter: document.getElementById('year-filter'),
     
     // Hero Banner
     heroBg: document.getElementById('hero-bg'),
@@ -328,6 +330,11 @@ function renderMovies() {
     if (state.currentGenre !== 'all') {
         const genreId = parseInt(state.currentGenre);
         filtered = filtered.filter(m => m.genre_ids && m.genre_ids.includes(genreId));
+    }
+
+    // Filter by Release Year
+    if (state.currentYear !== 'all') {
+        filtered = filtered.filter(m => m.release_date && m.release_date.startsWith(state.currentYear));
     }
 
     // Filter by Search Query
@@ -706,7 +713,7 @@ function updateFavCount() {
     if (mobileFavCount) mobileFavCount.textContent = state.watchlist.length;
 }
 
-// Genre Filter Chips
+// Genre & Year Filter Handlers
 function initGenreChips() {
     document.querySelectorAll('.chip').forEach(chip => {
         chip.addEventListener('click', () => {
@@ -717,6 +724,14 @@ function initGenreChips() {
             renderMovies();
         });
     });
+
+    if (elements.yearFilter) {
+        elements.yearFilter.addEventListener('change', (e) => {
+            state.currentYear = e.target.value;
+            state.currentPage = 1; // Reset to page 1 on year change
+            renderMovies();
+        });
+    }
 }
 
 // Global Live Search Across All Movies in the World

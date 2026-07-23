@@ -88,13 +88,26 @@
             </div>
         </section>
 
-        <!-- Category & Genre Filter Chips -->
+        <!-- Category, Genre & Year Filter Bar -->
         <section class="filter-section">
             <div class="section-header">
-                <h2><i class="fa-solid fa-sliders"></i> Filter Genre</h2>
+                <h2><i class="fa-solid fa-sliders"></i> Filter Eksplorasi</h2>
+                <div class="year-filter-box">
+                    <i class="fa-regular fa-calendar-days year-icon"></i>
+                    <select id="year-filter" class="year-dropdown">
+                        <option value="all">🗓️ Semua Tahun (2020 - 2026)</option>
+                        <option value="2026">🔥 Rilis 2026 (Terbaru)</option>
+                        <option value="2025">✨ Rilis 2025</option>
+                        <option value="2024">🎬 Rilis 2024</option>
+                        <option value="2023">🌟 Rilis 2023</option>
+                        <option value="2022">🍿 Rilis 2022</option>
+                        <option value="2021">🎥 Rilis 2021</option>
+                        <option value="2020">📺 Rilis 2020</option>
+                    </select>
+                </div>
             </div>
             <div class="genre-chips" id="genre-container">
-                <button class="chip active" data-genre="all">Semua</button>
+                <button class="chip active" data-genre="all">Semua Genre</button>
                 <button class="chip" data-genre="28">Action</button>
                 <button class="chip" data-genre="12">Adventure</button>
                 <button class="chip" data-genre="16">Animation</button>

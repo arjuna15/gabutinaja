@@ -511,6 +511,50 @@ body {
     border-color: rgba(255, 255, 255, 0.6);
 }
 
+/* Year Filter Glass Dropdown */
+.year-filter-box {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border-bright);
+    border-radius: var(--radius-full);
+    padding: 0.45rem 1.1rem;
+    box-shadow: var(--glass-shadow);
+    transition: var(--transition);
+}
+
+.year-filter-box:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.year-icon {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-right: 0.5rem;
+}
+
+.year-dropdown {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    padding-right: 0.5rem;
+}
+
+.year-dropdown option {
+    background: #07090e;
+    color: #ffffff;
+    padding: 0.5rem;
+}
+
 /* Filter Chips Section */
 .filter-section {
     margin-bottom: 2.5rem;

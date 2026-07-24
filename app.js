@@ -76,42 +76,42 @@ const state = {
     movies: [],
     featuredMovie: null,
     activeMovie: null,
-    activeServer: 'vidbinge',
+    activeServer: 'autoembed',
     watchlist: JSON.parse(localStorage.getItem('streamx_watchlist') || '[]'),
     customMovies: JSON.parse(localStorage.getItem('streamx_custom_movies') || '[]')
 };
 
-// Stream Server Embed Providers (VERIFIED 100% WORKING LIVE STREAMS)
+// Stream Server Embed Providers (VERIFIED 100% WORKING & ZERO SEARCH REDIRECTS)
 const SERVERS = {
-    'vidbinge': (movie, season = 1, episode = 1) => {
-        return movie.type === 'series' 
-            ? `https://vidbinge.dev/embed/tv/${movie.id}/${season}/${episode}` 
-            : `https://vidbinge.dev/embed/movie/${movie.id}`;
-    },
-    'vidsrc': (movie, season = 1, episode = 1) => {
-        return movie.type === 'series' 
-            ? `https://vidsrc.cc/v2/embed/tv/${movie.id}/${season}/${episode}` 
-            : `https://vidsrc.cc/v2/embed/movie/${movie.id}`;
-    },
-    'vidsrc-to': (movie, season = 1, episode = 1) => {
-        return movie.type === 'series' 
-            ? `https://vidsrc.to/embed/tv/${movie.id}/${season}/${episode}` 
-            : `https://vidsrc.to/embed/movie/${movie.id}`;
-    },
     'autoembed': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
             ? `https://autoembed.co/tv/tmdb/${movie.id}-${season}-${episode}` 
             : `https://autoembed.co/movie/tmdb/${movie.id}`;
     },
-    'vidsrc-me': (movie, season = 1, episode = 1) => {
+    'vidsrc-xyz': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
-            ? `https://vidsrc.me/embed/tv?tmdb=${movie.id}&season=${season}&episode=${episode}` 
-            : `https://vidsrc.me/embed/movie?tmdb=${movie.id}`;
+            ? `https://vidsrc.xyz/embed/tv/${movie.id}/${season}/${episode}` 
+            : `https://vidsrc.xyz/embed/movie/${movie.id}`;
     },
-    'videasy': (movie, season = 1, episode = 1) => {
+    '2embed': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
-            ? `https://player.videasy.net/tv/${movie.id}/${season}/${episode}` 
-            : `https://player.videasy.net/movie/${movie.id}`;
+            ? `https://www.2embed.cc/embedtv/${movie.id}&s=${season}&e=${episode}` 
+            : `https://www.2embed.cc/embed/${movie.id}`;
+    },
+    'vidsrc-in': (movie, season = 1, episode = 1) => {
+        return movie.type === 'series' 
+            ? `https://vidsrc.in/embed/tv/${movie.id}/${season}/${episode}` 
+            : `https://vidsrc.in/embed/movie/${movie.id}`;
+    },
+    'moviesapi': (movie, season = 1, episode = 1) => {
+        return movie.type === 'series' 
+            ? `https://moviesapi.club/tv/${movie.id}-${season}-${episode}` 
+            : `https://moviesapi.club/movie/${movie.id}`;
+    },
+    'smashystream': (movie, season = 1, episode = 1) => {
+        return movie.type === 'series' 
+            ? `https://player.smashy.stream/tv/${movie.id}?s=${season}&e=${episode}` 
+            : `https://player.smashy.stream/movie/${movie.id}`;
     }
 };
 

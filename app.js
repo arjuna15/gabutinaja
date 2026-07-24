@@ -76,7 +76,7 @@ const state = {
     movies: [],
     featuredMovie: null,
     activeMovie: null,
-    activeServer: 'autoembed',
+    activeServer: 'idlix',
     autoNext: localStorage.getItem('streamx_auto_next') !== 'false',
     autoNextTimer: null,
     watchlist: JSON.parse(localStorage.getItem('streamx_watchlist') || '[]'),
@@ -85,6 +85,17 @@ const state = {
 
 // Stream Server Embed Providers (VERIFIED 100% WORKING & ZERO SEARCH REDIRECTS)
 const SERVERS = {
+    'idlix': (movie, season = 1, episode = 1) => {
+        const slug = (movie.title || movie.name || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/\s+/g, '-');
+        if (movie.type === 'series') {
+            return `https://z2.idlixku.com/episode/${slug}-season-${season}-episode-${episode}/`;
+        }
+        return `https://z2.idlixku.com/movie/${slug}/`;
+    },
     'autoembed': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
             ? `https://autoembed.co/tv/tmdb/${movie.id}-${season}-${episode}` 

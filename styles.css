@@ -90,6 +90,56 @@ body {
     display: none !important;
 }
 
+/* 🍏 Custom Apple Glass & 3D Claymorphic Scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(5, 7, 11, 0.4);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.15) 100%);
+    border-radius: var(--radius-full);
+    border: 2px solid rgba(12, 15, 24, 0.7);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.3) 100%);
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+/* Specific Modal Container & Episode Grid Custom Scrollbars */
+.modal-container::-webkit-scrollbar,
+.episode-grid::-webkit-scrollbar,
+.glass-dropdown-menu::-webkit-scrollbar {
+    width: 7px;
+}
+
+.modal-container::-webkit-scrollbar-track,
+.episode-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+    margin: 6px 0;
+}
+
+.modal-container::-webkit-scrollbar-thumb,
+.episode-grid::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.18) 100%);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.modal-container::-webkit-scrollbar-thumb:hover,
+.episode-grid::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.4) 100%);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+}
+
 /* 🍏 Pure Apple VisionOS Floating Glass Navbar */
 .navbar {
     position: sticky;

@@ -77,6 +77,8 @@ const state = {
     featuredMovie: null,
     activeMovie: null,
     activeServer: 'autoembed',
+    autoNext: localStorage.getItem('streamx_auto_next') !== 'false',
+    autoNextTimer: null,
     watchlist: JSON.parse(localStorage.getItem('streamx_watchlist') || '[]'),
     customMovies: JSON.parse(localStorage.getItem('streamx_custom_movies') || '[]')
 };
@@ -735,6 +737,81 @@ function initNavigation() {
             }
         });
     }
+
+    // Auto-Next Episode Toggle Switch & Toast Handlers
+    const autoNextToggle = document.getElementById('auto-next-toggle');
+    const autoNextToast = document.getElementById('auto-next-toast');
+    const cancelAutoNextBtn = document.getElementById('cancel-auto-next');
+    const playNextNowBtn = document.getElementById('play-next-now');
+
+    if (autoNextToggle) {
+        autoNextToggle.classList.toggle('active', state.autoNext);
+        autoNextToggle.addEventListener('click', () => {
+            state.autoNext = !state.autoNext;
+            localStorage.setItem('streamx_auto_next', state.autoNext);
+            autoNextToggle.classList.toggle('active', state.autoNext);
+        });
+    }
+
+    if (cancelAutoNextBtn) {
+        cancelAutoNextBtn.addEventListener('click', () => {
+            if (state.autoNextTimer) clearInterval(state.autoNextTimer);
+            if (autoNextToast) autoNextToast.classList.add('hidden');
+        });
+    }
+
+    if (playNextNowBtn) {
+        playNextNowBtn.addEventListener('click', () => {
+            if (state.autoNextTimer) clearInterval(state.autoNextTimer);
+            if (autoNextToast) autoNextToast.classList.add('hidden');
+            changeEpisode(state.currentEpisode + 1);
+        });
+    }
+
+    // Video Ended PostMessage Listener for Cross-Origin Embed Players
+    window.addEventListener('message', (e) => {
+        try {
+            const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+            if (data && (data.event === 'ended' || data.status === 'ended' || data.event === 'finish' || data.type === 'ended')) {
+                triggerAutoNextEpisode();
+            }
+        } catch(err) {
+            if (e.data === 'ended' || e.data === 'video_ended') {
+                triggerAutoNextEpisode();
+            }
+        }
+    });
+
+    const nativeVideo = document.getElementById('native-video');
+    if (nativeVideo) {
+        nativeVideo.addEventListener('ended', triggerAutoNextEpisode);
+    }
+}
+
+// Trigger Auto-Next Episode Countdown & Transition
+function triggerAutoNextEpisode() {
+    if (!state.autoNext || !state.activeMovie || state.activeMovie.type !== 'series') return;
+    const nextEp = state.currentEpisode + 1;
+    const nextEpLabel = document.getElementById('next-ep-label');
+    const autoNextToast = document.getElementById('auto-next-toast');
+    const countdownTimer = document.getElementById('countdown-timer');
+
+    if (nextEpLabel) nextEpLabel.textContent = `Episode ${nextEp}`;
+    if (autoNextToast) autoNextToast.classList.remove('hidden');
+
+    let secondsLeft = 5;
+    if (countdownTimer) countdownTimer.textContent = secondsLeft;
+
+    if (state.autoNextTimer) clearInterval(state.autoNextTimer);
+    state.autoNextTimer = setInterval(() => {
+        secondsLeft -= 1;
+        if (countdownTimer) countdownTimer.textContent = secondsLeft;
+        if (secondsLeft <= 0) {
+            clearInterval(state.autoNextTimer);
+            if (autoNextToast) autoNextToast.classList.add('hidden');
+            changeEpisode(nextEp);
+        }
+    }, 1000);
 }
 
 function updateFavButtonState(isFav) {

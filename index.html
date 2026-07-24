@@ -246,11 +246,20 @@
                         referrerpolicy="no-referrer">
                 </iframe>
 
-                <!-- Native HTML5 Video Player -->
-                <video id="native-video" class="hidden" controls autoplay style="width:100%; height:100%; object-fit:contain; background:#000;">
-                    <source id="native-video-source" src="" type="video/mp4">
-                    Browser Anda tidak mendukung pemutar video HTML5.
-                </video>
+                <!-- Auto-Next Episode Toast Overlay -->
+                <div class="auto-next-toast hidden" id="auto-next-toast">
+                    <div class="toast-content">
+                        <i class="fa-solid fa-circle-play toast-icon"></i>
+                        <div class="toast-text">
+                            <h4>Episode Selesai Diputar</h4>
+                            <p>Memutar <strong id="next-ep-label">Episode 2</strong> otomatis dalam <span id="countdown-timer">5</span>d...</p>
+                        </div>
+                        <div class="toast-actions">
+                            <button id="cancel-auto-next" class="btn-toast-cancel" type="button">Batal</button>
+                            <button id="play-next-now" class="btn-toast-play" type="button">Putar Sekarang <i class="fa-solid fa-play"></i></button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Server Selector Bar -->
@@ -269,27 +278,40 @@
 
             <!-- TV Series Season & Episode Selector Bar -->
             <div class="tv-episodes-bar hidden" id="tv-episodes-bar">
-                <div class="season-picker">
-                    <label><i class="fa-solid fa-layer-group"></i> Musim / Season:</label>
-                    <div class="custom-glass-dropdown" id="custom-season-dropdown">
-                        <button class="glass-dropdown-trigger season-trigger" id="season-dropdown-trigger" type="button">
-                            <span id="selected-season-label">Season 1</span>
-                            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
-                        </button>
-                        <div class="glass-dropdown-menu hidden" id="season-dropdown-menu">
-                            <div class="glass-dropdown-item active" data-season="1"><span>Season 1</span> <i class="fa-solid fa-check check-mark"></i></div>
-                            <div class="glass-dropdown-item" data-season="2"><span>Season 2</span> <i class="fa-solid fa-check check-mark"></i></div>
-                            <div class="glass-dropdown-item" data-season="3"><span>Season 3</span> <i class="fa-solid fa-check check-mark"></i></div>
-                            <div class="glass-dropdown-item" data-season="4"><span>Season 4</span> <i class="fa-solid fa-check check-mark"></i></div>
-                            <div class="glass-dropdown-item" data-season="5"><span>Season 5</span> <i class="fa-solid fa-check check-mark"></i></div>
-                            <div class="glass-dropdown-item" data-season="6"><span>Season 6</span> <i class="fa-solid fa-check check-mark"></i></div>
-                            <div class="glass-dropdown-item" data-season="7"><span>Season 7</span> <i class="fa-solid fa-check check-mark"></i></div>
-                            <div class="glass-dropdown-item" data-season="8"><span>Season 8</span> <i class="fa-solid fa-check check-mark"></i></div>
-                            <div class="glass-dropdown-item" data-season="9"><span>Season 9</span> <i class="fa-solid fa-check check-mark"></i></div>
-                            <div class="glass-dropdown-item" data-season="10"><span>Season 10</span> <i class="fa-solid fa-check check-mark"></i></div>
+                <div class="episodes-bar-header">
+                    <div class="season-picker">
+                        <label><i class="fa-solid fa-layer-group"></i> Musim / Season:</label>
+                        <div class="custom-glass-dropdown" id="custom-season-dropdown">
+                            <button class="glass-dropdown-trigger season-trigger" id="season-dropdown-trigger" type="button">
+                                <span id="selected-season-label">Season 1</span>
+                                <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                            </button>
+                            <div class="glass-dropdown-menu hidden" id="season-dropdown-menu">
+                                <div class="glass-dropdown-item active" data-season="1"><span>Season 1</span> <i class="fa-solid fa-check check-mark"></i></div>
+                                <div class="glass-dropdown-item" data-season="2"><span>Season 2</span> <i class="fa-solid fa-check check-mark"></i></div>
+                                <div class="glass-dropdown-item" data-season="3"><span>Season 3</span> <i class="fa-solid fa-check check-mark"></i></div>
+                                <div class="glass-dropdown-item" data-season="4"><span>Season 4</span> <i class="fa-solid fa-check check-mark"></i></div>
+                                <div class="glass-dropdown-item" data-season="5"><span>Season 5</span> <i class="fa-solid fa-check check-mark"></i></div>
+                                <div class="glass-dropdown-item" data-season="6"><span>Season 6</span> <i class="fa-solid fa-check check-mark"></i></div>
+                                <div class="glass-dropdown-item" data-season="7"><span>Season 7</span> <i class="fa-solid fa-check check-mark"></i></div>
+                                <div class="glass-dropdown-item" data-season="8"><span>Season 8</span> <i class="fa-solid fa-check check-mark"></i></div>
+                                <div class="glass-dropdown-item" data-season="9"><span>Season 9</span> <i class="fa-solid fa-check check-mark"></i></div>
+                                <div class="glass-dropdown-item" data-season="10"><span>Season 10</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Auto-Next Toggle Pill -->
+                    <div class="auto-next-box">
+                        <label class="auto-next-label">
+                            <i class="fa-solid fa-forward-step"></i> Auto-Next Episode
+                        </label>
+                        <button class="toggle-pill active" id="auto-next-toggle" type="button" aria-label="Toggle Auto Next">
+                            <span class="toggle-thumb"></span>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="episode-picker">
                     <span class="episode-label"><i class="fa-solid fa-list-ol"></i> Pilih Episode:</span>
                     <div class="episode-grid" id="episode-grid">

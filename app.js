@@ -96,6 +96,17 @@ const SERVERS = {
         }
         return `https://z2.idlixku.com/movie/${slug}/`;
     },
+    'lk21': (movie, season = 1, episode = 1) => {
+        const slug = (movie.title || movie.name || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/\s+/g, '-');
+        if (movie.type === 'series') {
+            return `https://tv12.lk21official.cc/episode/${slug}-season-${season}-episode-${episode}/`;
+        }
+        return `https://tv12.lk21official.cc/${slug}/`;
+    },
     'autoembed': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
             ? `https://autoembed.co/tv/tmdb/${movie.id}-${season}-${episode}` 

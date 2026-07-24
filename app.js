@@ -90,6 +90,16 @@ const SERVERS = {
             ? `https://autoembed.co/tv/tmdb/${movie.id}-${season}-${episode}` 
             : `https://autoembed.co/movie/tmdb/${movie.id}`;
     },
+    'nontongo': (movie, season = 1, episode = 1) => {
+        return movie.type === 'series' 
+            ? `https://www.nontongo.win/embed/tv/${movie.id}/${season}/${episode}` 
+            : `https://www.nontongo.win/embed/movie/${movie.id}`;
+    },
+    'vidsrc-me': (movie, season = 1, episode = 1) => {
+        return movie.type === 'series' 
+            ? `https://vidsrc.me/embed/tv?tmdb=${movie.id}&season=${season}&episode=${episode}` 
+            : `https://vidsrc.me/embed/movie?tmdb=${movie.id}`;
+    },
     'vidsrc-xyz': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
             ? `https://vidsrc.xyz/embed/tv/${movie.id}/${season}/${episode}` 
@@ -99,11 +109,6 @@ const SERVERS = {
         return movie.type === 'series' 
             ? `https://www.2embed.cc/embedtv/${movie.id}&s=${season}&e=${episode}` 
             : `https://www.2embed.cc/embed/${movie.id}`;
-    },
-    'vidsrc-in': (movie, season = 1, episode = 1) => {
-        return movie.type === 'series' 
-            ? `https://vidsrc.in/embed/tv/${movie.id}/${season}/${episode}` 
-            : `https://vidsrc.in/embed/movie/${movie.id}`;
     },
     'moviesapi': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 

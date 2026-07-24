@@ -270,19 +270,25 @@
             <!-- TV Series Season & Episode Selector Bar -->
             <div class="tv-episodes-bar hidden" id="tv-episodes-bar">
                 <div class="season-picker">
-                    <label for="season-select"><i class="fa-solid fa-layer-group"></i> Musim / Season:</label>
-                    <select id="season-select" class="season-dropdown">
-                        <option value="1">Season 1</option>
-                        <option value="2">Season 2</option>
-                        <option value="3">Season 3</option>
-                        <option value="4">Season 4</option>
-                        <option value="5">Season 5</option>
-                        <option value="6">Season 6</option>
-                        <option value="7">Season 7</option>
-                        <option value="8">Season 8</option>
-                        <option value="9">Season 9</option>
-                        <option value="10">Season 10</option>
-                    </select>
+                    <label><i class="fa-solid fa-layer-group"></i> Musim / Season:</label>
+                    <div class="custom-glass-dropdown" id="custom-season-dropdown">
+                        <button class="glass-dropdown-trigger season-trigger" id="season-dropdown-trigger" type="button">
+                            <span id="selected-season-label">Season 1</span>
+                            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                        </button>
+                        <div class="glass-dropdown-menu hidden" id="season-dropdown-menu">
+                            <div class="glass-dropdown-item active" data-season="1"><span>Season 1</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            <div class="glass-dropdown-item" data-season="2"><span>Season 2</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            <div class="glass-dropdown-item" data-season="3"><span>Season 3</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            <div class="glass-dropdown-item" data-season="4"><span>Season 4</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            <div class="glass-dropdown-item" data-season="5"><span>Season 5</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            <div class="glass-dropdown-item" data-season="6"><span>Season 6</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            <div class="glass-dropdown-item" data-season="7"><span>Season 7</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            <div class="glass-dropdown-item" data-season="8"><span>Season 8</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            <div class="glass-dropdown-item" data-season="9"><span>Season 9</span> <i class="fa-solid fa-check check-mark"></i></div>
+                            <div class="glass-dropdown-item" data-season="10"><span>Season 10</span> <i class="fa-solid fa-check check-mark"></i></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="episode-picker">
                     <span class="episode-label"><i class="fa-solid fa-list-ol"></i> Pilih Episode:</span>

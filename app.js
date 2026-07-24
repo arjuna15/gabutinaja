@@ -500,7 +500,11 @@ function openPlayerModal(id, source = 'tmdb') {
     // TV Series Episode Selector Bar
     if (movie.type === 'series' && elements.tvEpisodesBar) {
         elements.tvEpisodesBar.classList.remove('hidden');
-        if (elements.seasonSelect) elements.seasonSelect.value = '1';
+        const selectedSeasonLabel = document.getElementById('selected-season-label');
+        if (selectedSeasonLabel) selectedSeasonLabel.textContent = 'Season 1';
+        document.querySelectorAll('#season-dropdown-menu .glass-dropdown-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.season === '1');
+        });
         renderEpisodeGrid(24);
     } else if (elements.tvEpisodesBar) {
         elements.tvEpisodesBar.classList.add('hidden');
@@ -684,13 +688,51 @@ function initNavigation() {
         if (state.currentTab === 'watchlist') renderMovies();
     });
 
-    // Season Dropdown Change
-    if (elements.seasonSelect) {
-        elements.seasonSelect.addEventListener('change', (e) => {
-            state.currentSeason = parseInt(e.target.value) || 1;
-            state.currentEpisode = 1;
-            renderEpisodeGrid(24);
-            loadServerStream(state.activeServer || 'videasy');
+    // Season Dropdown Handler (Custom 3D Claymorphic)
+    const seasonContainer = document.getElementById('custom-season-dropdown');
+    const seasonTrigger = document.getElementById('season-dropdown-trigger');
+    const seasonMenu = document.getElementById('season-dropdown-menu');
+    const selectedSeasonLabel = document.getElementById('selected-season-label');
+
+    if (seasonTrigger && seasonMenu && seasonContainer) {
+        seasonTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = seasonContainer.classList.contains('open');
+            if (isOpen) {
+                seasonContainer.classList.remove('open');
+                seasonMenu.classList.add('hidden');
+            } else {
+                seasonContainer.classList.add('open');
+                seasonMenu.classList.remove('hidden');
+            }
+        });
+
+        seasonMenu.querySelectorAll('.glass-dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const seasonNum = parseInt(item.dataset.season) || 1;
+                const spanEl = item.querySelector('span');
+                const itemText = spanEl ? spanEl.textContent : `Season ${seasonNum}`;
+
+                seasonMenu.querySelectorAll('.glass-dropdown-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                if (selectedSeasonLabel) selectedSeasonLabel.textContent = itemText;
+
+                state.currentSeason = seasonNum;
+                state.currentEpisode = 1;
+                seasonContainer.classList.remove('open');
+                seasonMenu.classList.add('hidden');
+                renderEpisodeGrid(24);
+                loadServerStream(state.activeServer || 'autoembed');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!seasonContainer.contains(e.target)) {
+                seasonContainer.classList.remove('open');
+                seasonMenu.classList.add('hidden');
+            }
         });
     }
 }

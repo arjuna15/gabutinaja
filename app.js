@@ -519,16 +519,16 @@ function openPlayerModal(id, source = 'tmdb') {
     // If custom direct video URL (e.g., MP4/M3U8 test streams)
     if (movie.customUrl && (movie.customUrl.endsWith('.mp4') || movie.customUrl.endsWith('.m3u8'))) {
         elements.streamIframe.classList.add('hidden');
-        nativeVideo.classList.remove('hidden');
-        nativeVideoSource.src = movie.customUrl;
-        nativeVideo.load();
+        if (nativeVideo) nativeVideo.classList.remove('hidden');
+        if (nativeVideoSource) nativeVideoSource.src = movie.customUrl;
+        if (nativeVideo) nativeVideo.load();
         elements.customUrlBox.classList.remove('hidden');
         elements.customIframeInput.value = movie.customUrl;
     } else {
-        nativeVideo.classList.add('hidden');
+        if (nativeVideo) nativeVideo.classList.add('hidden');
         elements.streamIframe.classList.remove('hidden');
         elements.customUrlBox.classList.add('hidden');
-        loadServerStream(state.activeServer || 'videasy');
+        loadServerStream(state.activeServer || 'autoembed');
     }
 
     elements.playerModal.classList.remove('hidden');
@@ -549,7 +549,7 @@ function renderEpisodeGrid(totalEps = 24) {
 function changeEpisode(epNum) {
     state.currentEpisode = epNum;
     renderEpisodeGrid(24);
-    loadServerStream(state.activeServer || 'videasy');
+    loadServerStream(state.activeServer || 'autoembed');
 }
 
 // Switch Stream Server
@@ -560,7 +560,7 @@ function loadServerStream(serverKey) {
     const nativeVideo = document.getElementById('native-video');
     const adShield = document.getElementById('ad-shield');
 
-    nativeVideo.classList.add('hidden');
+    if (nativeVideo) nativeVideo.classList.add('hidden');
     elements.streamIframe.classList.remove('hidden');
     
     // Highlight active server button

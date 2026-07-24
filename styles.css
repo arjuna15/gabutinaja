@@ -1803,39 +1803,139 @@ body {
         font-size: 0.75rem;
     }
 
+    /* 📱 Player Modal Mobile Ultra-Responsiveness System */
+    .modal-backdrop {
+        padding: 0.5rem;
+    }
+
     .player-modal-container {
-        width: 96vw;
-        padding: 1rem;
+        width: 98vw;
         max-height: 94vh;
-        overflow-y: auto;
+        padding: 1rem;
+        border-radius: var(--radius-md);
+    }
+
+    .modal-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .modal-header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .modal-title-info h3 {
+        font-size: 1.25rem;
+        line-height: 1.3;
+    }
+
+    .modal-subtitle-badges {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .btn-fav-glass {
+        padding: 0.4rem 0.95rem;
+        font-size: 0.8rem;
+    }
+
+    .server-selector-bar {
+        padding: 0.6rem 0.8rem;
+        gap: 0.6rem;
+    }
+
+    .server-label {
+        font-size: 0.82rem;
+        width: 100%;
     }
 
     .server-buttons {
+        width: 100%;
         overflow-x: auto;
         flex-wrap: nowrap;
         padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
     }
 
     .server-btn {
-        padding: 0.45rem 0.8rem;
-        font-size: 0.8rem;
+        padding: 0.4rem 0.85rem;
+        font-size: 0.78rem;
         white-space: nowrap;
         flex-shrink: 0;
     }
 
-    .season-picker {
+    .episodes-bar-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: 0.8rem;
     }
 
-    .season-dropdown {
+    .auto-next-box {
         width: 100%;
+        justify-content: space-between;
+    }
+
+    .episode-grid {
+        max-height: 110px;
+        gap: 0.4rem;
     }
 
     .ep-btn {
-        padding: 0.4rem 0.7rem;
+        padding: 0.4rem 0.75rem;
+        font-size: 0.78rem;
+    }
+
+    .modal-body-info {
+        margin-top: 1.2rem;
+        padding: 1rem;
+    }
+
+    .movie-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .movie-poster-sm {
+        width: 110px;
+        margin: 0 auto 0.5rem auto;
+    }
+
+    .movie-details h4 {
+        font-size: 1.05rem;
+        text-align: center;
+    }
+
+    .movie-details p {
+        font-size: 0.86rem;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    .meta-row {
+        flex-direction: column;
+        gap: 0.5rem;
         font-size: 0.8rem;
+        padding-top: 0.8rem;
+    }
+
+    .toast-content {
+        padding: 1.2rem;
+        max-width: 90vw;
+    }
+
+    .toast-icon {
+        font-size: 2.2rem;
+    }
+
+    .toast-text h4 {
+        font-size: 1.05rem;
+    }
+
+    .toast-text p {
+        font-size: 0.85rem;
     }
 
     .pagination-container {

@@ -507,12 +507,7 @@ function openPlayerModal(id, source = 'tmdb') {
     // TV Series Episode Selector Bar
     if (movie.type === 'series' && elements.tvEpisodesBar) {
         elements.tvEpisodesBar.classList.remove('hidden');
-        const selectedSeasonLabel = document.getElementById('selected-season-label');
-        if (selectedSeasonLabel) selectedSeasonLabel.textContent = 'Season 1';
-        document.querySelectorAll('#season-dropdown-menu .glass-dropdown-item').forEach(item => {
-            item.classList.toggle('active', item.dataset.season === '1');
-        });
-        renderEpisodeGrid(24);
+        setupTVSeriesSeasons(movie);
     } else if (elements.tvEpisodesBar) {
         elements.tvEpisodesBar.classList.add('hidden');
     }
@@ -539,9 +534,97 @@ function openPlayerModal(id, source = 'tmdb') {
     elements.playerModal.classList.remove('hidden');
 }
 
-// Render Episode Buttons (Eps 1 to totalEps)
-function renderEpisodeGrid(totalEps = 24) {
+// Setup Dynamic Seasons & Episode Counts for TV Series
+async function setupTVSeriesSeasons(movie) {
+    if (!movie.seasons_data) {
+        try {
+            const resp = await fetch(`https://api.themoviedb.org/3/tv/${movie.id}?api_key=${TMDB_API_KEY}`);
+            if (resp.ok) {
+                const data = await resp.json();
+                movie.total_seasons = data.number_of_seasons || 1;
+                movie.seasons_data = (data.seasons || []).filter(s => s.season_number > 0);
+            }
+        } catch (e) {
+            console.warn('Failed to fetch TMDB TV details, using fallback:', e);
+        }
+    }
+
+    if (!movie.total_seasons) movie.total_seasons = 1;
+    if (!movie.seasons_data || movie.seasons_data.length === 0) {
+        movie.seasons_data = [{ season_number: 1, episode_count: 12 }];
+    }
+
+    renderSeasonDropdown(movie);
+    renderEpisodeGridForSeason(movie, state.currentSeason);
+}
+
+// Render Season Dropdown Items Dynamically
+function renderSeasonDropdown(movie) {
+    const seasonMenu = document.getElementById('season-dropdown-menu');
+    const selectedSeasonLabel = document.getElementById('selected-season-label');
+    if (!seasonMenu) return;
+
+    if (selectedSeasonLabel) {
+        selectedSeasonLabel.textContent = `Season ${state.currentSeason}`;
+    }
+
+    let html = '';
+    movie.seasons_data.forEach(s => {
+        const num = s.season_number;
+        const count = s.episode_count || 12;
+        const isActive = num === state.currentSeason;
+        html += `<div class="glass-dropdown-item ${isActive ? 'active' : ''}" data-season="${num}">
+                    <span>Season ${num} (${count} Eps)</span>
+                    <i class="fa-solid fa-check check-mark"></i>
+                 </div>`;
+    });
+
+    seasonMenu.innerHTML = html;
+    bindSeasonDropdownItemEvents(movie);
+}
+
+// Bind Season Dropdown Clicks
+function bindSeasonDropdownItemEvents(movie) {
+    const seasonContainer = document.getElementById('custom-season-dropdown');
+    const seasonMenu = document.getElementById('season-dropdown-menu');
+    const selectedSeasonLabel = document.getElementById('selected-season-label');
+
+    if (!seasonMenu) return;
+
+    seasonMenu.querySelectorAll('.glass-dropdown-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const seasonNum = parseInt(item.dataset.season) || 1;
+            
+            seasonMenu.querySelectorAll('.glass-dropdown-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+
+            if (selectedSeasonLabel) selectedSeasonLabel.textContent = `Season ${seasonNum}`;
+
+            state.currentSeason = seasonNum;
+            state.currentEpisode = 1;
+            
+            if (seasonContainer) seasonContainer.classList.remove('open');
+            seasonMenu.classList.add('hidden');
+
+            renderEpisodeGridForSeason(movie, state.currentSeason);
+            loadServerStream(state.activeServer || 'autoembed');
+        });
+    });
+}
+
+// Render Episode Buttons for Specific Season
+function renderEpisodeGridForSeason(movie, seasonNum) {
     if (!elements.episodeGrid) return;
+    
+    let totalEps = 12;
+    if (movie.seasons_data) {
+        const seasonObj = movie.seasons_data.find(s => s.season_number === seasonNum);
+        if (seasonObj && seasonObj.episode_count) {
+            totalEps = seasonObj.episode_count;
+        }
+    }
+
     let html = '';
     for (let ep = 1; ep <= totalEps; ep++) {
         const isActive = ep === state.currentEpisode;
@@ -550,10 +633,25 @@ function renderEpisodeGrid(totalEps = 24) {
     elements.episodeGrid.innerHTML = html;
 }
 
-// Change Episode Selection
+// Change Episode Selection with Season Spillover Support
 function changeEpisode(epNum) {
-    state.currentEpisode = epNum;
-    renderEpisodeGrid(24);
+    const movie = state.activeMovie;
+    if (!movie) return;
+
+    let currentSeasonObj = movie.seasons_data ? movie.seasons_data.find(s => s.season_number === state.currentSeason) : null;
+    let maxEps = currentSeasonObj ? currentSeasonObj.episode_count : 12;
+
+    if (epNum > maxEps && state.currentSeason < (movie.total_seasons || 1)) {
+        // Advance to Next Season, Ep 1
+        state.currentSeason += 1;
+        state.currentEpisode = 1;
+        renderSeasonDropdown(movie);
+        renderEpisodeGridForSeason(movie, state.currentSeason);
+    } else {
+        state.currentEpisode = Math.min(epNum, maxEps);
+        renderEpisodeGridForSeason(movie, state.currentSeason);
+    }
+
     loadServerStream(state.activeServer || 'autoembed');
 }
 

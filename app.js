@@ -110,10 +110,10 @@ const SERVERS = {
             ? `https://www.2embed.cc/embedtv/${movie.id}&s=${season}&e=${episode}` 
             : `https://www.2embed.cc/embed/${movie.id}`;
     },
-    'moviesapi': (movie, season = 1, episode = 1) => {
+    'vidsrc-net': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 
-            ? `https://moviesapi.club/tv/${movie.id}-${season}-${episode}` 
-            : `https://moviesapi.club/movie/${movie.id}`;
+            ? `https://vidsrc.net/embed/tv/${movie.id}/${season}/${episode}` 
+            : `https://vidsrc.net/embed/movie/${movie.id}`;
     },
     'smashystream': (movie, season = 1, episode = 1) => {
         return movie.type === 'series' 

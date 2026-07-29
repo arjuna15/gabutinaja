@@ -1613,6 +1613,14 @@ body {
         width: 220px;
     }
 
+    .desktop-menu {
+        display: none !important;
+    }
+
+    .mobile-dropdown-btn {
+        display: inline-flex !important;
+    }
+
     .hero-section {
         min-height: 420px;
         margin-bottom: 2.5rem;

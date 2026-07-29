@@ -699,8 +699,7 @@ function loadServerStream(serverKey) {
     const providerFn = SERVERS[serverKey] || SERVERS['vidbinge'];
     const streamUrl = providerFn(state.activeMovie, state.currentSeason, state.currentEpisode);
     
-    
-    const isExternalOnly = ['idlix', 'lk21'].includes(elements.serverSelect.value);
+    const isExternalOnly = ['idlix', 'lk21'].includes(serverKey);
     
     if (isExternalOnly) {
         elements.streamIframe.classList.add('hidden');
@@ -711,10 +710,12 @@ function loadServerStream(serverKey) {
             externalBtn.className = 'w-full py-4 bg-primary text-white font-bold rounded-xl mt-10 hover:opacity-90 transition-all';
             elements.streamIframe.parentElement.appendChild(externalBtn);
         }
-        externalBtn.textContent = 'Buka di ' + elements.serverSelect.options[elements.serverSelect.selectedIndex].text + ' (Tab Baru)';
+        const serverName = serverKey === 'idlix' ? 'IDLIX' : 'LK21';
+        externalBtn.textContent = 'Buka di ' + serverName + ' (Tab Baru)';
         externalBtn.onclick = () => window.open(streamUrl, '_blank');
         externalBtn.classList.remove('hidden');
-        hideLoader();
+        elements.playerLoader.classList.add('hidden');
+        if (adShield) adShield.classList.add('hidden');
     } else {
         const externalBtn = document.getElementById('external-watch-btn');
         if (externalBtn) externalBtn.classList.add('hidden');

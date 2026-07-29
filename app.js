@@ -560,7 +560,7 @@ function openPlayerModal(id, source = 'tmdb') {
 async function setupTVSeriesSeasons(movie) {
     if (!movie.seasons_data) {
         try {
-            const resp = await fetch(`https://api.themoviedb.org/3/tv/${movie.id}?api_key=${TMDB_API_KEY}`);
+            const resp = await fetch(`https://api.themoviedb.org/3/tv/${movie.id}?api_key=${CONFIG.TMDB_API_KEY}`);
             if (resp.ok) {
                 const data = await resp.json();
                 movie.total_seasons = data.number_of_seasons || 1;
@@ -1072,8 +1072,8 @@ function initSearch() {
                             vote_average: item.vote_average ? Number(item.vote_average.toFixed(1)) : 8.0,
                             vote_count: item.vote_count || 0,
                             overview: item.overview || 'Sinopsis belum tersedia.',
-                            poster_path: item.poster_path ? `${CONFIG.IMAGE_BASE_URL}${item.poster_path}` : 'https://via.placeholder.com/500x750.png?text=No+Poster',
-                            backdrop_path: item.backdrop_path ? `${CONFIG.BACKDROP_BASE_URL}${item.backdrop_path}` : 'https://via.placeholder.com/1200x600.png?text=StreamX',
+                            poster_path: item.poster_path ? `${CONFIG.IMAGE_BASE_URL}${item.poster_path}` : 'https://placehold.co/500x750/111/FFF?text=No+Poster',
+                            backdrop_path: item.backdrop_path ? `${CONFIG.BACKDROP_BASE_URL}${item.backdrop_path}` : 'https://placehold.co/1200x600/111/FFF?text=StreamX',
                             genre_ids: item.genre_ids || []
                         }));
                         

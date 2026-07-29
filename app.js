@@ -76,7 +76,7 @@ const state = {
     movies: [],
     featuredMovie: null,
     activeMovie: null,
-    activeServer: 'idlix',
+    activeServer: 'autoembed',
     autoNext: localStorage.getItem('streamx_auto_next') !== 'false',
     autoNextTimer: null,
     watchlist: JSON.parse(localStorage.getItem('streamx_watchlist') || '[]'),
@@ -699,7 +699,29 @@ function loadServerStream(serverKey) {
     const providerFn = SERVERS[serverKey] || SERVERS['vidbinge'];
     const streamUrl = providerFn(state.activeMovie, state.currentSeason, state.currentEpisode);
     
-    elements.streamIframe.src = streamUrl;
+    
+    const isExternalOnly = ['idlix', 'lk21'].includes(elements.serverSelect.value);
+    
+    if (isExternalOnly) {
+        elements.streamIframe.classList.add('hidden');
+        let externalBtn = document.getElementById('external-watch-btn');
+        if (!externalBtn) {
+            externalBtn = document.createElement('button');
+            externalBtn.id = 'external-watch-btn';
+            externalBtn.className = 'w-full py-4 bg-primary text-white font-bold rounded-xl mt-10 hover:opacity-90 transition-all';
+            elements.streamIframe.parentElement.appendChild(externalBtn);
+        }
+        externalBtn.textContent = 'Buka di ' + elements.serverSelect.options[elements.serverSelect.selectedIndex].text + ' (Tab Baru)';
+        externalBtn.onclick = () => window.open(streamUrl, '_blank');
+        externalBtn.classList.remove('hidden');
+        hideLoader();
+    } else {
+        const externalBtn = document.getElementById('external-watch-btn');
+        if (externalBtn) externalBtn.classList.add('hidden');
+        elements.streamIframe.classList.remove('hidden');
+        elements.streamIframe.src = streamUrl;
+    }
+
 
     // Instantly hide loader once iframe URL is assigned or loaded
     const hideLoader = () => {
@@ -1088,12 +1110,16 @@ function initModals() {
     elements.closePlayerModal.addEventListener('click', () => {
         elements.playerModal.classList.add('hidden');
         elements.streamIframe.src = ''; // Stop video on close
+        const externalBtn = document.getElementById('external-watch-btn');
+        if (externalBtn) externalBtn.classList.add('hidden');
     });
 
     elements.playerModal.addEventListener('click', (e) => {
         if (e.target === elements.playerModal) {
             elements.playerModal.classList.add('hidden');
             elements.streamIframe.src = '';
+            const externalBtn = document.getElementById('external-watch-btn');
+            if (externalBtn) externalBtn.classList.add('hidden');
         }
     });
 

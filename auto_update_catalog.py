@@ -86,12 +86,14 @@ def update_catalog():
             json.dump(catalog, f, ensure_ascii=False, separators=(',', ':'))
         print(f"✅ Berhasil menambah {new_added} film/series baru ke catalog.json! Total: {len(catalog)} judul.")
         
-        # Auto-commit and push to GitHub
+        # Auto-commit locally
         try:
-            os.system(f"cd /home/junancok/Downloads/movie-stream-app && git add catalog.json && git commit -m 'cron: auto-update catalog with {new_added} new releases' && git push origin main")
-            print("🚀 Auto-pushed updated catalog to GitHub repo!")
+            os.system(f"cd /home/junancok/Downloads/movie-stream-app && git add catalog.json && git commit -m 'cron: auto-update catalog with {new_added} new releases'")
+            # Attempt push only if non-interactive credentials exist
+            os.system("GIT_TERMINAL_PROMPT=0 git push origin main 2>/dev/null || true")
+            print("🚀 Catalog updated and committed locally!")
         except Exception as ge:
-            print(f"Git push note: {ge}")
+            print(f"Git note: {ge}")
     else:
         print("✨ Database sudah up-to-date! Tidak ada judul baru.")
 

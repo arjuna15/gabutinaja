@@ -317,6 +317,67 @@ async function loadCatalogDatabase() {
     } catch (e) {
         console.error('Error setting up hero banner:', e);
     }
+
+    // 🚀 Client-Side Auto-Sync: Automatically fetch live trending/new releases on every visit
+    autoSyncLiveTrending();
+}
+
+// Auto-Sync Trending & Latest 2026 Releases directly into browser memory
+async function autoSyncLiveTrending() {
+    try {
+        const endpoints = [
+            '/trending/all/day',
+            '/movie/now_playing',
+            '/discover/movie?primary_release_year=2026&sort_by=popularity.desc',
+            '/discover/tv?first_air_date_year=2026&sort_by=popularity.desc'
+        ];
+
+        const existingIds = new Set(state.movies.map(m => m.id));
+        let addedCount = 0;
+
+        for (const ep of endpoints) {
+            const sep = ep.includes('?') ? '&' : '?';
+            const url = `${CONFIG.TMDB_BASE_URL}${ep}${sep}api_key=${CONFIG.TMDB_API_KEY}&language=id-ID`;
+            const resp = await fetch(url);
+            if (!resp.ok) continue;
+            const data = await resp.json();
+            if (!data.results || !Array.isArray(data.results)) continue;
+
+            data.results.forEach(item => {
+                if (!item || !item.id || existingIds.has(item.id)) return;
+                if (!item.poster_path) return;
+
+                const isMovie = item.media_type === 'movie' || Boolean(item.title || item.release_date);
+                const title = item.title || item.name || 'Untitled';
+                const relDate = (item.release_date || item.first_air_date || '2026').substring(0, 4);
+
+                const newMovie = {
+                    id: item.id,
+                    title: title,
+                    type: isMovie ? 'movie' : 'series',
+                    release_date: relDate,
+                    vote_average: item.vote_average ? Number(item.vote_average.toFixed(1)) : 8.0,
+                    vote_count: item.vote_count || 0,
+                    overview: item.overview || 'Sinopsis belum tersedia.',
+                    poster_path: `${CONFIG.IMAGE_BASE_URL}${item.poster_path}`,
+                    backdrop_path: item.backdrop_path ? `${CONFIG.BACKDROP_BASE_URL}${item.backdrop_path}` : `${CONFIG.IMAGE_BASE_URL}${item.poster_path}`,
+                    genre_ids: item.genre_ids || []
+                };
+
+                state.movies.unshift(newMovie);
+                existingIds.add(item.id);
+                addedCount++;
+            });
+        }
+
+        if (addedCount > 0) {
+            console.log(`✨ [AutoSync] Berhasil memuat ${addedCount} judul baru langsung dari TMDB!`);
+            renderMovies();
+            setupHeroBanner();
+        }
+    } catch (err) {
+        console.warn('[AutoSync] Background sync notice:', err);
+    }
 }
 
 // Fallback Live TMDB Fetcher

@@ -85,6 +85,26 @@ const state = {
 
 // Stream Server Embed Providers (VERIFIED 100% WORKING & ZERO SEARCH REDIRECTS)
 const SERVERS = {
+    'rebahin': (movie, season = 1, episode = 1) => {
+        if (movie.rebahin_play_url) {
+            return movie.rebahin_play_url;
+        }
+        if (movie.rebahin_url) {
+            return movie.type === 'series'
+                ? `${movie.rebahin_url}watch`
+                : `${movie.rebahin_url}play`;
+        }
+        const slug = (movie.title || movie.name || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/\s+/g, '-');
+        const year = (movie.release_date || '2026').slice(0, 4);
+        if (movie.type === 'series') {
+            return `https://rebahinxxi3.mom/series/nonton-${slug}-${year}/watch`;
+        }
+        return `https://rebahinxxi3.mom/nonton-${slug}-${year}-sub-indo/play`;
+    },
     'idlix': (movie, season = 1, episode = 1) => {
         const slug = (movie.title || movie.name || '')
             .toLowerCase()
@@ -418,6 +438,8 @@ function renderMovies() {
         filtered = [...filtered].sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
     } else if (state.currentTab === 'watchlist') {
         filtered = state.watchlist;
+    } else if (state.currentTab === 'indonesia') {
+        filtered = filtered.filter(m => m.is_indonesian || m.country === 'ID' || m.source === 'rebahin' || String(m.id).startsWith('90'));
     }
 
     // Filter by Genre
@@ -467,9 +489,11 @@ function renderMovies() {
         const posterUrl = (movie.poster_path && movie.poster_path.startsWith('http')) 
             ? movie.poster_path 
             : (movie.poster_path ? `${CONFIG.IMAGE_BASE_URL}${movie.poster_path}` : 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=500&auto=format&fit=crop');
+        const isIndo = Boolean(movie.is_indonesian || movie.country === 'ID' || movie.source === 'rebahin' || String(movie.id).startsWith('90'));
+        const typeBadge = `${(movie.type || 'MOVIE').toUpperCase()}${isIndo ? ' • 🇮🇩 INDO' : ''}`;
 
         return `
-        <div class="movie-card" onclick="openPlayerModal(${movie.id}, '${movie.customUrl ? 'custom' : 'tmdb'}')">
+        <div class="movie-card" onclick="openPlayerModal('${movie.id}', '${movie.customUrl ? 'custom' : (movie.source || 'tmdb')}')">
             <div class="card-poster">
                 <img src="${posterUrl}" 
                      alt="${movie.title}" 
@@ -478,7 +502,7 @@ function renderMovies() {
                 <div class="card-overlay">
                     <div class="play-hover-btn"><i class="fa-solid fa-play"></i></div>
                 </div>
-                <span class="card-type-badge">${movie.type || 'MOVIE'}</span>
+                <span class="card-type-badge">${typeBadge}</span>
                 <span class="card-badge-rating"><i class="fa-solid fa-star"></i> ${movie.vote_average || '8.0'}</span>
             </div>
             <div class="card-info">
@@ -611,7 +635,9 @@ function openPlayerModal(id, source = 'tmdb') {
         if (nativeVideo) nativeVideo.classList.add('hidden');
         elements.streamIframe.classList.remove('hidden');
         elements.customUrlBox.classList.add('hidden');
-        loadServerStream(state.activeServer || 'autoembed');
+        const isIndo = Boolean(movie.is_indonesian || movie.country === 'ID' || movie.source === 'rebahin' || String(movie.id).startsWith('90'));
+        const defaultServer = isIndo ? 'rebahin' : (state.activeServer || 'autoembed');
+        loadServerStream(defaultServer);
     }
 
     elements.playerModal.classList.remove('hidden');
@@ -619,6 +645,14 @@ function openPlayerModal(id, source = 'tmdb') {
 
 // Setup Dynamic Seasons & Episode Counts for TV Series
 async function setupTVSeriesSeasons(movie) {
+    if (movie.source === 'rebahin' || String(movie.id).startsWith('90')) {
+        movie.total_seasons = 1;
+        movie.seasons_data = [{ season_number: 1, episode_count: 24 }];
+        renderSeasonDropdown(movie);
+        renderEpisodeGridForSeason(movie, state.currentSeason);
+        return;
+    }
+
     if (!movie.seasons_data) {
         try {
             const resp = await fetch(`https://api.themoviedb.org/3/tv/${movie.id}?api_key=${CONFIG.TMDB_API_KEY}`);
@@ -855,6 +889,8 @@ function initNavigation() {
                 elements.sectionTitle.innerHTML = `<i class="fa-solid fa-tv text-gradient"></i> Serial TV Populer`;
             } else if (state.currentTab === 'trending') {
                 elements.sectionTitle.innerHTML = `<i class="fa-solid fa-fire text-gradient"></i> Paling Populer & Top Rating`;
+            } else if (state.currentTab === 'indonesia') {
+                elements.sectionTitle.innerHTML = `<i class="fa-solid fa-flag text-gradient"></i> Koleksi Film & Serial Indonesia (Rebahin XXI)`;
             } else {
                 elements.sectionTitle.innerHTML = `<i class="fa-solid fa-house text-gradient"></i> Beranda - Semua Tayangan`;
             }

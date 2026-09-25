@@ -81,6 +81,30 @@ def update_catalog():
             existing_ids.add(mid)
             new_added += 1
 
+    # Also sync latest Indonesian releases from rebahinxxi3.mom
+    try:
+        from scrape_rebahin import fetch_page_with_retry
+        print("🇮🇩 Menyinkronkan rilisan film & serial Indonesia terbaru dari rebahinxxi3.mom...")
+        indo_urls = [
+            "https://rebahinxxi3.mom/country/indonesia/",
+            "https://rebahinxxi3.mom/country/indonesia/page/2/",
+            "https://rebahinxxi3.mom/country/indonesia/page/3/",
+            "https://rebahinxxi3.mom/genre/series-indonesia/"
+        ]
+        indo_added = 0
+        for i_url in indo_urls:
+            items = fetch_page_with_retry(i_url)
+            for it in items:
+                if it['id'] not in existing_ids:
+                    catalog.insert(0, it)
+                    existing_ids.add(it['id'])
+                    new_added += 1
+                    indo_added += 1
+        if indo_added > 0:
+            print(f"🇮🇩 Berhasil menambah {indo_added} judul film/series Indonesia terbaru dari Rebahin XXI!")
+    except Exception as ie:
+        print(f"Rebahin sync note: {ie}")
+
     if new_added > 0:
         with open(CATALOG_PATH, 'w', encoding='utf-8') as f:
             json.dump(catalog, f, ensure_ascii=False, separators=(',', ':'))
@@ -88,7 +112,7 @@ def update_catalog():
         
         # Auto-commit locally
         try:
-            os.system(f"cd /home/junancok/Downloads/movie-stream-app && git add catalog.json && git commit -m 'cron: auto-update catalog with {new_added} new releases'")
+            os.system(f"cd /home/junancok/Downloads/movie-stream-app && git add catalog.json && git commit -m 'cron: auto-update catalog with {new_added} new releases (incl. Rebahin XXI Indo)'")
             # Attempt push only if non-interactive credentials exist
             os.system("GIT_TERMINAL_PROMPT=0 git push origin main 2>/dev/null || true")
             print("🚀 Catalog updated and committed locally!")

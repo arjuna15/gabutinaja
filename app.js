@@ -86,24 +86,23 @@ const state = {
 // Stream Server Embed Providers (VERIFIED 100% WORKING & ZERO SEARCH REDIRECTS)
 const SERVERS = {
     'rebahin': (movie, season = 1, episode = 1) => {
-        if (movie.rebahin_play_url) {
-            return movie.rebahin_play_url;
+        // TV Series: return specific clean episode video stream
+        if (movie.type === 'series' && Array.isArray(movie.episodes_sources) && movie.episodes_sources.length > 0) {
+            const epIdx = Math.max(0, Math.min(episode - 1, movie.episodes_sources.length - 1));
+            return movie.episodes_sources[epIdx];
         }
-        if (movie.rebahin_url) {
-            return movie.type === 'series'
-                ? `${movie.rebahin_url}watch`
-                : `${movie.rebahin_url}play`;
+        // Movie: return clean direct video stream
+        if (movie.stream_url) {
+            return movie.stream_url;
         }
-        const slug = (movie.title || movie.name || '')
-            .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, '')
-            .trim()
-            .replace(/\s+/g, '-');
-        const year = (movie.release_date || '2026').slice(0, 4);
-        if (movie.type === 'series') {
-            return `https://rebahinxxi3.mom/series/nonton-${slug}-${year}/watch`;
+        if (Array.isArray(movie.stream_sources) && movie.stream_sources.length > 0) {
+            return movie.stream_sources[0];
         }
-        return `https://rebahinxxi3.mom/nonton-${slug}-${year}-sub-indo/play`;
+        if (movie.rebahin_b64) {
+            return `https://rebahinxxi3.mom/iembed/?source=${movie.rebahin_b64}`;
+        }
+        // Fallback to LK21 / Autoembed to avoid showing external website wrapper
+        return SERVERS['lk21'] ? SERVERS['lk21'](movie, season, episode) : SERVERS['autoembed'](movie, season, episode);
     },
     'idlix': (movie, season = 1, episode = 1) => {
         const slug = (movie.title || movie.name || '')
@@ -646,8 +645,9 @@ function openPlayerModal(id, source = 'tmdb') {
 // Setup Dynamic Seasons & Episode Counts for TV Series
 async function setupTVSeriesSeasons(movie) {
     if (movie.source === 'rebahin' || String(movie.id).startsWith('90')) {
+        const epCount = (movie.episodes_sources && movie.episodes_sources.length > 0) ? movie.episodes_sources.length : 12;
         movie.total_seasons = 1;
-        movie.seasons_data = [{ season_number: 1, episode_count: 24 }];
+        movie.seasons_data = [{ season_number: 1, episode_count: epCount }];
         renderSeasonDropdown(movie);
         renderEpisodeGridForSeason(movie, state.currentSeason);
         return;

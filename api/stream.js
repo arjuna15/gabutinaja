@@ -81,7 +81,10 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-        const userAgent = req.headers['user-agent'];
+        let userAgent = req.headers['user-agent'] || '';
+        if (!userAgent.includes('Mozilla')) {
+            userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+        }
         let result = await fetchWithReferer(directUrl, userAgent);
 
         // If returned page is Rebahin iembed wrapper, extract inner iframe and fetch direct player

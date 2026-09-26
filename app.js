@@ -86,22 +86,44 @@ const state = {
 // Stream Server Embed Providers (VERIFIED 100% WORKING & ZERO SEARCH REDIRECTS)
 const SERVERS = {
     'rebahin': (movie, season = 1, episode = 1) => {
+        let streamUrl = null;
         // TV Series: return specific clean episode video stream
         if (movie.type === 'series' && Array.isArray(movie.episodes_sources) && movie.episodes_sources.length > 0) {
             const epIdx = Math.max(0, Math.min(episode - 1, movie.episodes_sources.length - 1));
-            return movie.episodes_sources[epIdx];
+            streamUrl = movie.episodes_sources[epIdx];
+        } else if (movie.stream_url) {
+            streamUrl = movie.stream_url;
+        } else if (Array.isArray(movie.stream_sources) && movie.stream_sources.length > 0) {
+            streamUrl = movie.stream_sources[0];
+        } else if (movie.rebahin_b64) {
+            streamUrl = movie.rebahin_b64;
         }
-        // Movie: return clean direct video stream
-        if (movie.stream_url) {
-            return movie.stream_url;
+
+        if (streamUrl) {
+            // Decode base64 or iembed wrapper if present
+            if (streamUrl.includes('source=')) {
+                try {
+                    const b64 = streamUrl.split('source=')[1].split('&')[0];
+                    const decoded = atob(b64);
+                    if (decoded.startsWith('http')) streamUrl = decoded;
+                } catch (e) {}
+            } else if (!streamUrl.startsWith('http')) {
+                try {
+                    const decoded = atob(streamUrl);
+                    if (decoded.startsWith('http')) streamUrl = decoded;
+                } catch (e) {}
+            }
+
+            // Direct YouTube embed
+            if (streamUrl.includes('youtube.com') || streamUrl.includes('youtu.be')) {
+                return streamUrl;
+            }
+
+            // Route through /api/stream to bypass Referer check & deliver clean direct video player
+            return `/api/stream?url=${encodeURIComponent(streamUrl)}`;
         }
-        if (Array.isArray(movie.stream_sources) && movie.stream_sources.length > 0) {
-            return movie.stream_sources[0];
-        }
-        if (movie.rebahin_b64) {
-            return `https://rebahinxxi3.mom/iembed/?source=${movie.rebahin_b64}`;
-        }
-        // Fallback to LK21 / Autoembed to avoid showing external website wrapper
+
+        // Fallback to LK21 / Autoembed
         return SERVERS['lk21'] ? SERVERS['lk21'](movie, season, episode) : SERVERS['autoembed'](movie, season, episode);
     },
     'idlix': (movie, season = 1, episode = 1) => {

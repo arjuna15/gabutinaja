@@ -32,8 +32,18 @@ def fetch_streams_for_movie(movie, retries=2):
             html = urllib.request.urlopen(req, timeout=10).read().decode('utf-8', errors='ignore')
             matches = PATTERN.findall(html)
             if matches:
+                import base64
                 unique_b64 = list(dict.fromkeys(matches))
-                clean_streams = [f"https://rebahinxxi3.mom/iembed/?source={b}" for b in unique_b64]
+                clean_streams = []
+                for b in unique_b64:
+                    try:
+                        dec = base64.b64decode(b).decode('utf-8', errors='ignore')
+                        if dec.startswith('http'):
+                            clean_streams.append(dec)
+                        else:
+                            clean_streams.append(f"https://rebahinxxi3.mom/iembed/?source={b}")
+                    except Exception:
+                        clean_streams.append(f"https://rebahinxxi3.mom/iembed/?source={b}")
                 return movie['id'], clean_streams[0], clean_streams
             return movie['id'], None, []
         except Exception:
